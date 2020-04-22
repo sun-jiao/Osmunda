@@ -1,18 +1,74 @@
 # Osmunda
-**The README in both Chinese and English is complete.**
 
-**中文和英文版本的README均是完整的。**
+[![](https://jitpack.io/v/moe.sunjiao/osmunda.svg)](https://jitpack.io/#moe.sunjiao/osmunda)
 
-# Introduction | 简介
+[中文介绍](./ZH-rCN.md)
+
+## Introduction
 
 Osmunda is an Android library to uncompress Open Street Map data, write into SQLite, for offline geocoding. 
 
-Osmunda是一个Android库，读取开放街道地图数据，写入SQLite中，可用于离线地理编码等。
+# How to use
 
-# OSM data source | 开放街道地图数据源
+## Gradle Settings
 
-# References & Credits | 参考及致谢
+#### Step 1.
 
-Thanks to [spyhunter99/osmreader](https://github.com/spyhunter99/osmreader), I referred to it, rewrote its core algorithms in kotlin, and fixed some bugs.
+Add the JitPack repository to your project build.gradle file:
 
-感谢[spyhunter99/osmreader](https://github.com/spyhunter99/osmreader)，我参考了该项目，用kotlin重写了它的核心算法，并解决了一些bug。
+	allprojects {
+		repositories {
+			...
+			maven { url 'https://jitpack.io' }
+		}
+	}
+
+#### Step 2.
+
+Add the dependency
+
+	dependencies {
+	        implementation 'moe.sunjiao:osmunda:1.0.0'
+	}
+
+## Data import
+
+Instantiate an OsmosisReader.
+	
+	val reader : OsmReader = OsmosisReader() 
+
+Set import relations and ways data, if you don't need them, don't write these two lines. See [Performance/Improve](#improve)
+
+	reader.options.add(ImportOption.INCLUDE_RELATIONS) 
+	reader.options.add(ImportOption.INCLUDE_WAYS) 
+
+Set commitFrequency, don't set it to keep the default value (500,000 for pbf file, and 250,000 for xml file). See [Performance/Improve](#improve)
+
+# Performance
+
+## Storage
+
+## CPU
+
+## Memory
+
+## Time
+
+## Improve
+
+# OSM data website
+
+# License
+
+Copyright (C) 2020 SUN JIAO (https://www.sunjiao.moe)
+Apache License Version 2.0, January 2004
+http://www.apache.org/licenses/
+
+
+# References & Credits
+
+Thanks to [spyhunter99/osmreader](https://github.com/spyhunter99/osmreader), I referred to it, rewrote its core algorithms in kotlin, fixed the Osmosis not work problem, and added reverse geocode features.
+
+# My OSM Account
+
+[sun-jiao](https://www.openstreetmap.org/user/sun-jiao)
