@@ -84,6 +84,8 @@ class Address(val name: String, databaseId: Long, database: SQLiteDatabase) {
                 }
             }
             tag.close()
+
+            
         } catch (ex: Exception) {
             throw ex
         } finally {
