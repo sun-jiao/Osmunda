@@ -1,14 +1,27 @@
 package moe.sunjiao.osmunda
 
 import android.content.Context
+import android.database.sqlite.SQLiteDatabase
+import moe.sunjiao.osmunda.model.Address
+import moe.sunjiao.osmunda.model.SearchResult
 import java.io.File
 import java.io.FilenameFilter
 import java.util.*
 import kotlin.collections.ArrayList
 
-class Osmunda {
-    fun getDatabaseList(context: Context) : Array<File>?{
-        val path = File(context.filesDir.absolutePath.replace("files", "osmunda"))
-        return path.listFiles { dir, name -> name.toLowerCase(Locale.ROOT).endsWith(".sqlite") }
+class Osmunda(val context: Context) {
+
+    fun getDatabaseList() : Array<File>?{
+        return getOsmundaDir()
+            .listFiles { dir, name -> name.toLowerCase(Locale.ROOT).endsWith(".sqlite") }
     }
+
+    fun getDatabaseByName(name : String): SQLiteDatabase{
+        return context.openOrCreateDatabase(getOsmundaDir().absolutePath + "/" + name + "sqlite", 0, null)
+    }
+
+    fun getOsmundaDir(): File{
+        return File(context.filesDir.absolutePath + "/osmunda")
+    }
+    
 }

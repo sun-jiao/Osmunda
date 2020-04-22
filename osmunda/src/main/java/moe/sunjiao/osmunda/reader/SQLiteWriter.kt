@@ -5,6 +5,7 @@ import android.content.Context
 import android.database.sqlite.SQLiteConstraintException
 import android.database.sqlite.SQLiteDatabase
 import android.util.Log
+import moe.sunjiao.osmunda.Osmunda
 import moe.sunjiao.osmunda.model.OsmType
 import org.openstreetmap.osmosis.core.domain.v0_6.*
 
@@ -23,8 +24,7 @@ class SQLiteWriter (context : Context, databaseName: String, private val commitF
     private var memberValuesList = ArrayList<ContentValues>()
 
     init{
-        database = context.openOrCreateDatabase(context.filesDir.absolutePath.replace("files", "osmunda")
-                + "/" + databaseName + ".sqlite", 0, null)
+        database = Osmunda(context).getDatabaseByName(databaseName)
         database.execSQL("CREATE TABLE IF NOT EXISTS \"nodes\" (\"id\" INTEGER PRIMARY KEY  NOT NULL , \"lat\" DOUBLE NOT NULL , \"lon\" DOUBLE NOT NULL , \"version\" INTEGER, \"timestamp\" DATETIME, \"uid\" INTEGER, \"user\" TEXT, \"changeset\" INTEGER)")
         database.execSQL("CREATE TABLE IF NOT EXISTS \"relation_members\" (\"type\" TEXT NOT NULL , \"member_id\" INTEGER NOT NULL , \"role\" TEXT, \"relation_id\" INTEGER NOT NULL,\"insert_id\" INTEGER NOT NULL, PRIMARY KEY( \"relation_id\",\"member_id\",\"insert_id\" ))")
         database.execSQL("CREATE TABLE IF NOT EXISTS \"relations\" (\"id\" INTEGER PRIMARY KEY  NOT NULL , \"user\" TEXT, \"uid\" INTEGER, \"version\" INTEGER, \"changeset\" INTEGER, \"timestamp\" BIGINT)")
