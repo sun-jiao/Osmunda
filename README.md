@@ -1,17 +1,17 @@
 # Osmunda
-The README in both Chinese and English is complete.
+**The README in both Chinese and English is complete.**
 
-中文和英文版本的README均是完整的。
+**中文和英文版本的README均是完整的。**
 
-# Introduction 简介
+# Introduction | 简介
 
-An Android library to uncompress Open Street Map data, write into SQLite, for offline geocoding. 
+Osmunda is an Android library to uncompress Open Street Map data, write into SQLite, for offline geocoding. 
 
-离线地理编码Android库，使用开放街道地图数据。
+Osmunda是一个Android库，读取开放街道地图数据，写入SQLite中，可用于离线地理编码等。
 
-# OSM data source 开放街道地图数据源
+# OSM data source | 开放街道地图数据源
 
-# References & Credits 参考及致谢
+# References & Credits | 参考及致谢
 
 Thanks to [spyhunter99/osmreader](https://github.com/spyhunter99/osmreader), I referred to it, rewrote its core algorithms in kotlin, and fixed some bugs.
 
