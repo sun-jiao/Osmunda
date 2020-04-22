@@ -55,7 +55,7 @@ Set commitFrequency, don't set it to keep the default value (500,000 for pbf fil
 
 ## How to improve
 
-# OSM data source
+# OSM data website
 
 # License
 
