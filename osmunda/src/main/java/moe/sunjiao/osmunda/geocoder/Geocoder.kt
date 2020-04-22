@@ -30,6 +30,7 @@ class Geocoder(val database: SQLiteDatabase) {
                     cursor.getDouble(cursor.getColumnIndex("lon")),
                     cursor.getString(cursor.getColumnIndex("v")),
                     rowType,
+                    database,
                     cursor.getLong(cursor.getColumnIndex("id"))))
             }
             cursor.close()
