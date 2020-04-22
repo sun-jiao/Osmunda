@@ -4,9 +4,11 @@ import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import moe.sunjiao.osmunda.model.OsmType
 import moe.sunjiao.osmunda.model.SearchResult
+import org.osmdroid.util.BoundingBox
 import java.util.*
 
 class Geocoder(val database: SQLiteDatabase) {
+
     @Throws(Exception::class)
     fun search(
         searchQueryOptional: String,
@@ -16,7 +18,7 @@ class Geocoder(val database: SQLiteDatabase) {
         maxLon: Double,
         minLat: Double,
         minLon: Double
-    ): List<SearchResult>? {
+    ): List<SearchResult> {
         val resultList: MutableList<SearchResult> = ArrayList<SearchResult>()
 
         try {
@@ -41,4 +43,11 @@ class Geocoder(val database: SQLiteDatabase) {
         }
         return resultList
     }
+
+    fun search (searchQueryOptional: String, limit: Int, offset: Int): List<SearchResult>
+            = search(searchQueryOptional, limit, offset, 90.00, 180.00, -90.00, -180.00)
+
+    fun search (searchQueryOptional: String, limit: Int, offset: Int, boundingBox: BoundingBox): List<SearchResult>
+            = search(searchQueryOptional, limit, offset, boundingBox.latNorth, boundingBox.lonEast,boundingBox.latSouth,boundingBox.lonWest)
+
 }

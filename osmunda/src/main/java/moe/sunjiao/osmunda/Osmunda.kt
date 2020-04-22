@@ -5,7 +5,7 @@ import android.database.sqlite.SQLiteDatabase
 import java.io.File
 import java.util.*
 
-class Osmunda(val context: Context) {
+class Osmunda(private val context: Context) {
 
     fun getDatabaseList() : Array<File>?{
         return getOsmundaDir()
