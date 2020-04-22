@@ -1,5 +1,4 @@
 # Osmunda
-**The README in both Chinese and English is complete.**
 
 [中文介绍](./ZH-rCN.md)
 
