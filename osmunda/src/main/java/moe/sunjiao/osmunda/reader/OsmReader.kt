@@ -16,4 +16,5 @@ interface OsmReader {
     var elementCount: Long
     val batchSize: Int
     val progress: () -> Double
+    var insert: () -> Long
 }

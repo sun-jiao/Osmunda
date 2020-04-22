@@ -25,7 +25,7 @@ class OsmosisReader :OsmReader, Sink {
     override var batchSize = 100
     override var elementCount: Long = 0
     override val options: MutableSet<ImportOption> = HashSet<ImportOption>()
-    private var insert :() -> Long = {
+    override var insert :() -> Long = {
         if (::writer.isInitialized)
             writer.insert
         else
