@@ -1,6 +1,5 @@
 # Osmunda
-
-**中文和英文版本的README均是完整的。**
+[![](https://jitpack.io/v/moe.sunjiao/osmunda.svg)](https://jitpack.io/#moe.sunjiao/osmunda)
 
 ## 简介
 
@@ -32,15 +31,39 @@ Osmunda是一个Android库，读取开放街道地图数据，写入SQLite中，
 ## 导入数据
 
 实例化一个OsmosisReader。
-	
+
+```kotlin
 	val reader : OsmReader = OsmosisReader() 
+```
 
 设置导入关系和道路数据，不需要的话，直接不写这两行就行了。参见 [性能/提升性能](#提升性能)
 
+```kotlin
 	reader.options.add(ImportOption.INCLUDE_RELATIONS) 
 	reader.options.add(ImportOption.INCLUDE_WAYS) 
+```
 
 设置提交频率，否则将使用默认设置（pbf文件：500,000，xml文件：250,000）。参见 [性能/提升性能](#提升性能)
+
+```
+	(reader as OsmosisReader).commitFrequency = 100000
+```
+
+设置OSM数据文件，context和数据库文件名，开始读取。
+
+```kotlin
+	reader.read(File(requireContext().filesDir.absolutePath + "/hubei-latest.osm.pbf"), requireContext(), "hubei" )
+```
+
+## 获取导入状态
+
+使用`reader.read`获取已读取的OSM记录数目，`reader.insert`获取已插入数据库的OSM记录数目。（二者不一致的原因参见 [性能/提升性能](#提升性能)）
+
+使用`reader.progress`获取百分比形式的当前估计进度。
+
+## 获取现有数据库列表
+
+
 
 # 性能
 
