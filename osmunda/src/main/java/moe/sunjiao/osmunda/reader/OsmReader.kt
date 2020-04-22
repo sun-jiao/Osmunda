@@ -8,7 +8,7 @@ interface OsmReader {
 
 
     @Throws(Exception::class)
-    fun read(file: File, context : Context, databaseName: String)
+    fun readData(file: File, context : Context, databaseName: String)
 
     val parserName: String
     val options: MutableSet<ImportOption>

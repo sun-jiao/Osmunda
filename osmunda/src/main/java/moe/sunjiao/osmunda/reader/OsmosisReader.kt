@@ -48,7 +48,7 @@ class OsmosisReader :OsmReader, Sink {
     }
 
     @Throws(Exception::class)
-    override fun read(file: File, context : Context, databaseName: String) {
+    override fun readData(file: File, context : Context, databaseName: String) {
         val reader: RunnableSource
         var fis: FileInputStream? = null
         val start = System.currentTimeMillis()
