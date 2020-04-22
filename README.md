@@ -3,17 +3,17 @@
 
 **中文和英文版本的README均是完整的。**
 
-# Introduction | 简介
+## Introduction | 简介
 
 Osmunda is an Android library to uncompress Open Street Map data, write into SQLite, for offline geocoding. 
 
 Osmunda是一个Android库，读取开放街道地图数据，写入SQLite中，可用于离线地理编码等。
 
-# How to use | 如何使用
+## How to use | 如何使用
 
-## Gradle Settings | Gradle设置
+### Gradle Settings | Gradle设置
 
-### Step 1. | 第一步
+#### Step 1. | 第一步
 
 Add the JitPack repository to your project build.gradle file:
 
@@ -26,7 +26,7 @@ Add the JitPack repository to your project build.gradle file:
 		}
 	}
 
-### Step 2. | 第二步
+#### Step 2. | 第二步
 
 Add the dependency
 
@@ -36,20 +36,20 @@ Add the dependency
 	        implementation 'moe.sunjiao:osmunda:1.0.0'
 	}
 
-## Data import | 导入代码
+### Data import | 导入代码
 
   
 
-# OSM data source | 开放街道地图数据源
+## OSM data source | 开放街道地图数据源
 
-# License | 许可证
+## License | 许可证
 
-    Copyright (C) 2020 [SUN JIAO](https://www.sunjiao.moe)
+    Copyright (C) 2020 SUN JIAO (https://www.sunjiao.moe)
     Apache License Version 2.0, January 2004
     http://www.apache.org/licenses/
 
 
-# References & Credits | 参考及致谢
+## References & Credits | 参考及致谢
 
 Thanks to [spyhunter99/osmreader](https://github.com/spyhunter99/osmreader), I referred to it, rewrote its core algorithms in kotlin, and fixed some bugs.
 
