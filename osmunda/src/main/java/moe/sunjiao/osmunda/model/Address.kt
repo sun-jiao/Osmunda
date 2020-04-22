@@ -5,24 +5,24 @@ import android.database.sqlite.SQLiteDatabase
 import java.sql.PreparedStatement
 
 class Address(databaseId: Long, database: SQLiteDatabase) {
-    var state: String? = null
-    var city: String? = null
-    var postcode: String? = null
-    var housenumber: String? = null
+    var state: String = ""
+    var city: String = ""
+    var postcode: String = ""
+    var housenumber: String = ""
 
-    var fullAddress: String? = null
-    var address_source: String? = null
-    var country: String? = null
-    var county: String? = null
-    var housename: String? = null
-    var unit: String? = null
-    var street: String? = null
-    var street_1: String? = null
-    var street_2: String? = null
-    var street_3: String? = null
+    var fullAddress: String = ""
+    var address_source: String = ""
+    var country: String = ""
+    var county: String = ""
+    var housename: String = ""
+    var unit: String = ""
+    var street: String = ""
+    var street_1: String = ""
+    var street_2: String = ""
+    var street_3: String = ""
 
-    var phone: String? = null
-    var website: String? = null
+    var phone: String = ""
+    var website: String = ""
 
     init {
         try {
@@ -78,6 +78,7 @@ class Address(databaseId: Long, database: SQLiteDatabase) {
         } catch (ex: Exception) {
             throw ex
         } finally {
+            fullAddress = housenumber + ", " + housename + ", " + street_3 + ", " + street_2 + ", " + street_1 + ", " + street + ", " + county + ", " + city + ", " + state + ", " + country + " (" + postcode + ", " + phone + ", " + website + ")"
         }
     }
 }
