@@ -25,7 +25,7 @@ class Address(val name: String, databaseId: Long, database: SQLiteDatabase) {
 
     init {
         try {
-            val tag: Cursor = database.query("tag", arrayOf("k,v"), "id=?", arrayOf(databaseId.toString() + ""), null, null, null, null)
+            val tag: Cursor = database.query("tag", arrayOf("k,v"), "id=?", arrayOf(databaseId.toString()), null, null, null, null)
             while (tag.moveToNext()) {
                 if ("phone".equals(tag.getString(0), ignoreCase = true)) {
                     phone = tag.getString(1)
@@ -42,6 +42,12 @@ class Address(val name: String, databaseId: Long, database: SQLiteDatabase) {
                 } else if ("addr:city".equals(tag.getString(0), ignoreCase = true)) {
                     city = tag.getString(1)
                 } else if ("addr:state".equals(tag.getString(0), ignoreCase = true)) {
+                    state = tag.getString(1)
+                } else if ("addr:province".equals(tag.getString(0), ignoreCase = true)) {
+                    state = tag.getString(1)
+                } else if ("is_in:province".equals(tag.getString(0), ignoreCase = true)) {
+                    state = tag.getString(1)
+                } else if ("province".equals(tag.getString(0), ignoreCase = true)) {
                     state = tag.getString(1)
                 } else if ("addr:housenumber".equals(tag.getString(0), ignoreCase = true)) {
                     housenumber = tag.getString(1)
@@ -71,13 +77,17 @@ class Address(val name: String, databaseId: Long, database: SQLiteDatabase) {
                     country = tag.getString(1)
                 } else if ("addr:country".equals(tag.getString(0), ignoreCase = true)) {
                     country = tag.getString(1)
+                } else if ("is_in:country".equals(tag.getString(0), ignoreCase = true)) {
+                    country = tag.getString(1)
+                } else if ("is_in:country_code".equals(tag.getString(0), ignoreCase = true)) {
+                    country = tag.getString(1)
                 }
             }
             tag.close()
         } catch (ex: Exception) {
             throw ex
         } finally {
-            fullAddress = housenumber + ", " + housename + ", " + street_3 + ", " + street_2 + ", " + street_1 + ", " + street + ", " + county + ", " + city + ", " + state + ", " + country + " (" + postcode + ", " + phone + ", " + website + ")"
+            fullAddress = name + ", " + housenumber + ", " + housename + ", " + street_3 + ", " + street_2 + ", " + street_1 + ", " + street + ", " + county + ", " + city + ", " + state + ", " + country + " (" + postcode + ", " + phone + ", " + website + ")"
         }
     }
 
