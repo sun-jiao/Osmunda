@@ -76,10 +76,15 @@ reader.read(File(requireContext().filesDir.absolutePath + "/hubei-latest.osm.pbf
 ```kotlin
 val hubeiDatabase: SQLiteDatabase = Osmunda(requireContext()).getDatabaseByName("hubei")
 val list: List<SearchResult> = Geocoder(hubeiDatabase).search("华中师范大学", 10, 0, 30.7324, 114.6589, 30.3183, 114.0588)
+```
+
+如果不设置范围，将会在数据库的所有记录中搜索：
+
+```kotlin
 val list2: List<SearchResult> = Geocoder(hubeiDatabase).search("华中师范大学", 10, 0)
 ```
 
-如果是在地图上进行搜索，也可以将当前MapView的BoundingBox传入：
+如果是在地图上进行搜索，可以直接将当前MapView的BoundingBox传入：
 
 ```kotlin
 val box : BoundingBox = mapView.boundingBox
