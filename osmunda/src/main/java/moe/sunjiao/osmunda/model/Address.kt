@@ -2,9 +2,8 @@ package moe.sunjiao.osmunda.model
 
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
-import java.sql.PreparedStatement
 
-class Address(databaseId: Long, database: SQLiteDatabase) {
+class Address(val name: String, databaseId: Long, database: SQLiteDatabase) {
     var state: String = ""
     var city: String = ""
     var postcode: String = ""
@@ -81,4 +80,6 @@ class Address(databaseId: Long, database: SQLiteDatabase) {
             fullAddress = housenumber + ", " + housename + ", " + street_3 + ", " + street_2 + ", " + street_1 + ", " + street + ", " + county + ", " + city + ", " + state + ", " + country + " (" + postcode + ", " + phone + ", " + website + ")"
         }
     }
+
+    constructor(result: SearchResult) : this(result.name, result.databaseId, result.database)
 }

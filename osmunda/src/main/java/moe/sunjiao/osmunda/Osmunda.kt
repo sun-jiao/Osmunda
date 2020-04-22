@@ -2,12 +2,8 @@ package moe.sunjiao.osmunda
 
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
-import moe.sunjiao.osmunda.model.Address
-import moe.sunjiao.osmunda.model.SearchResult
 import java.io.File
-import java.io.FilenameFilter
 import java.util.*
-import kotlin.collections.ArrayList
 
 class Osmunda(val context: Context) {
 
@@ -23,5 +19,5 @@ class Osmunda(val context: Context) {
     fun getOsmundaDir(): File{
         return File(context.filesDir.absolutePath + "/osmunda")
     }
-    
+
 }

@@ -3,7 +3,6 @@ package moe.sunjiao.osmunda.reader
 import android.content.Context
 import moe.sunjiao.osmunda.model.ImportOption
 import java.io.File
-import java.sql.Connection
 
 interface OsmReader {
 
