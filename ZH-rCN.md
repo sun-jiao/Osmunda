@@ -113,7 +113,7 @@ val list3: List<SearchResult> = Geocoder(hubeiDatabase).search("华中师范大�
 
 可从其它镜像数据网站下载：[网站列表](https://wiki.openstreetmap.org/wiki/Planet.osm)
 
-对于中国用户，我个人推荐[开放街道地图法国社区网站](http://download.openstreetmap.fr/extracts/asia/china/)，其中有中国的分省数据，大大方便了下载和使用。
+对于中国用户，我推荐[开放街道地图法国社区网站](http://download.openstreetmap.fr/extracts/asia/china/)，其中有中国的分省数据，大大方便了下载和使用。
 
 # 许可证
 
