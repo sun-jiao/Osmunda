@@ -5,6 +5,6 @@ The README in both Chinese and English is complete.
 
 #
 
-An Android library to uncompress Open Street Map data, write into SQLite, for offline geocoding and other usages. 
+An Android library to uncompress Open Street Map data, write into SQLite, for offline geocoding. 
 
-Android库，读取开放街道地图数据，写入SQLite中，可用于离线地理编码等。
+离线地理编码Android库，使用开放街道地图数据。
