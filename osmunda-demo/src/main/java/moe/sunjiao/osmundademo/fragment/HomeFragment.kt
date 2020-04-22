@@ -4,13 +4,11 @@ import android.app.Activity.RESULT_OK
 import android.content.ContentResolver
 import android.content.Context
 import android.content.Intent
-import android.database.sqlite.SQLiteDatabase
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.os.Message
 import android.provider.MediaStore
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.OnClickListener
@@ -20,10 +18,7 @@ import android.widget.ProgressBar
 import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.fragment_home.*
 import moe.sunjiao.osmunda.Osmunda
-import moe.sunjiao.osmunda.geocoder.Geocoder
-import moe.sunjiao.osmunda.geocoder.ReverseGeocoder
 import moe.sunjiao.osmunda.model.ImportOption
-import moe.sunjiao.osmunda.model.SearchResult
 import moe.sunjiao.osmunda.reader.OsmReader
 import moe.sunjiao.osmunda.reader.OsmosisReader
 import moe.sunjiao.osmundademo.R
@@ -43,7 +38,7 @@ class HomeFragment : Fragment() {
         val thisView: View = inflater.inflate(R.layout.fragment_home,container,false)
         reader.options.add(ImportOption.INCLUDE_RELATIONS)
         reader.options.add(ImportOption.INCLUDE_WAYS)
-        val thread = Thread(Runnable {
+        /*val thread = Thread(Runnable {
             val hubeiDatabase: SQLiteDatabase = Osmunda(requireContext()).getDatabaseByName("hubei")
             val list: List<SearchResult> =
                 Geocoder(hubeiDatabase).search("华中师范大学", 100, 0, 30.7324, 114.6589, 30.3183, 114.0588)
@@ -53,17 +48,30 @@ class HomeFragment : Fragment() {
                 Log.i(TAG, result.name + "  " + result.databaseId + "  " + address.fullAddress)
             }
         })
-        thread.start()
-        val file = File(context?.filesDir?.absolutePath+ "/nauru-latest.osm.bz2")
+        thread.start()*/
+        val file = File(requireContext().filesDir.absolutePath+ "/hubei.osm.pbf")
 
-        //val thread = Thread(Runnable { context?.let { reader.readData(file, it, "nauru") } })
+        val handler = MyHandler()
+        val readThread = Thread(Runnable { context?.let { reader.readData(file, it, "hubei") } })
 
         val listener : OnClickListener = OnClickListener {
-            val intent = Intent()
-            intent.type = "*/*"
+            /*val intent = Intent()
+            intent.type = "*//*"
             intent.action = Intent.ACTION_GET_CONTENT;
-            startActivityForResult(Intent.createChooser(intent, "Select Osm Source File"), 100);
+            startActivityForResult(Intent.createChooser(intent, "Select Osm Source File"), 100);*/
+            readThread.start()
+            val task: TimerTask = object : TimerTask() {
+                override fun run() {
+
+                    val message = handler.obtainMessage()
+                    message.obj = arrayOf(reader.progress(), import_progress)
+                    message.what = 0
+                    handler.sendMessage(message)
+                }
             }
+            val timer = Timer(true)
+            timer.schedule(task, 0, 1000)
+        }
         thisView.findViewById<ImageButton?>(R.id.import_button)?.setOnClickListener(listener)
         return thisView
     }
@@ -76,7 +84,8 @@ class HomeFragment : Fragment() {
                 override fun run() {
                     val handler = MyHandler()
                     val message = handler.obtainMessage()
-                    message.obj = arrayOf(reader.progress, import_progress)
+                    val prog : Double = reader.progress()
+                    message.obj = arrayOf(prog, import_progress)
                     message.what = 0
                     handler.sendMessage(message)
                 }
@@ -95,7 +104,6 @@ class HomeFragment : Fragment() {
                 0-> {
                     val array : Array<Any> = msg.obj as Array<Any>
                     (array[1] as ProgressBar).progress = (array[0] as Double).toInt()
-
                 }
                 else -> {
                 }
