@@ -5,7 +5,6 @@ import android.content.ContentResolver
 import android.content.Context
 import android.content.Intent
 import android.database.sqlite.SQLiteDatabase
-import android.database.sqlite.SQLiteStatement
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
@@ -20,7 +19,11 @@ import android.widget.ImageButton
 import android.widget.ProgressBar
 import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.fragment_home.*
+import moe.sunjiao.osmunda.Osmunda
+import moe.sunjiao.osmunda.geocoder.Geocoder
+import moe.sunjiao.osmunda.geocoder.ReverseGeocoder
 import moe.sunjiao.osmunda.model.ImportOption
+import moe.sunjiao.osmunda.model.SearchResult
 import moe.sunjiao.osmunda.reader.OsmReader
 import moe.sunjiao.osmunda.reader.OsmosisReader
 import moe.sunjiao.osmundademo.R
@@ -30,6 +33,7 @@ import java.util.*
 
 class HomeFragment : Fragment() {
     val reader : OsmReader = OsmosisReader()
+    val TAG = "Home"
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -39,10 +43,20 @@ class HomeFragment : Fragment() {
         val thisView: View = inflater.inflate(R.layout.fragment_home,container,false)
         reader.options.add(ImportOption.INCLUDE_RELATIONS)
         reader.options.add(ImportOption.INCLUDE_WAYS)
-
+        val thread = Thread(Runnable {
+            val hubeiDatabase: SQLiteDatabase = Osmunda(requireContext()).getDatabaseByName("hubei")
+            val list: List<SearchResult> =
+                Geocoder(hubeiDatabase).search("华中师范大学", 100, 0, 30.7324, 114.6589, 30.3183, 114.0588)
+                //ReverseGeocoder(hubeiDatabase).search(30.51910, 114.35775, 100, 0)
+            for (result in list) {
+                val address = result.toAddress
+                Log.i(TAG, result.name + "  " + result.databaseId + "  " + address.fullAddress)
+            }
+        })
+        thread.start()
         val file = File(context?.filesDir?.absolutePath+ "/nauru-latest.osm.bz2")
 
-        val thread = Thread(Runnable { context?.let { reader.read(file, it, "nauru") } })
+        //val thread = Thread(Runnable { context?.let { reader.readData(file, it, "nauru") } })
 
         val listener : OnClickListener = OnClickListener {
             val intent = Intent()
