@@ -29,7 +29,7 @@ class SQLiteWriter (context : Context, databaseName: String, private val commitF
         database.execSQL("CREATE TABLE IF NOT EXISTS \"relation_members\" (\"type\" TEXT NOT NULL , \"member_id\" INTEGER NOT NULL , \"role\" TEXT, \"relation_id\" INTEGER NOT NULL,\"insert_id\" INTEGER NOT NULL, PRIMARY KEY( \"relation_id\",\"member_id\",\"insert_id\" ))")
         database.execSQL("CREATE TABLE IF NOT EXISTS \"relations\" (\"id\" INTEGER PRIMARY KEY  NOT NULL , \"user\" TEXT, \"uid\" INTEGER, \"version\" INTEGER, \"changeset\" INTEGER, \"timestamp\" BIGINT)")
         database.execSQL("CREATE TABLE IF NOT EXISTS \"tag\" (\"id\" INTEGER NOT NULL , \"k\" TEXT NOT NULL , \"v\" TEXT NOT NULL , \"reftype\" INTEGER NOT NULL  DEFAULT -1, PRIMARY KEY( \"reftype\",\"k\" ,\"id\" )   )")
-        database.execSQL("CREATE TABLE IF NOT EXISTS \"way_node\" (\"way_id\" INTEGER NOT NULL , \"node_id\" INTEGER NOT NULL,\"lat\" DOUBLE NOT NULL , \"lon\" DOUBLE NOT NULL ,\"insert_id\" INTEGER NOT NULL,  PRIMARY KEY (\"way_id\", \"node_id\",\"insert_id\")  )  ")
+        database.execSQL("CREATE TABLE IF NOT EXISTS \"way_no\" (\"way_id\" INTEGER NOT NULL , \"node_id\" INTEGER NOT NULL,\"lat\" DOUBLE NOT NULL , \"lon\" DOUBLE NOT NULL ,\"insert_id\" INTEGER NOT NULL,  PRIMARY KEY (\"way_id\", \"node_id\",\"insert_id\")  )  ")
         database.execSQL("CREATE TABLE IF NOT EXISTS \"ways\" (\"id\" INTEGER PRIMARY KEY  NOT NULL , \"changeset\" INTEGER, \"version\" INTEGER, \"user\" TEXT, \"uid\" INTEGER, \"timestamp\" BIGINT)")
     }
 
@@ -54,7 +54,7 @@ class SQLiteWriter (context : Context, databaseName: String, private val commitF
             "relations",
             "ways",
             "tag",
-            "way_node",
+            "way_no",
             "relation_members")
 
         database.beginTransaction()
@@ -146,13 +146,11 @@ class SQLiteWriter (context : Context, databaseName: String, private val commitF
         insertWay(way.id, way.changesetId, way.version, way.user.name, way.user.id, way.timestamp.time)
     }
 
-    fun insertWayNode(way_id: Long,node_id:Long, lat:Double, lon: Double, insert_id:Long){
+    fun insertWayNode(way_id: Long,node_id:Long, insert_id:Long){
         try {
             val values = ContentValues()
             values.put("way_id", way_id)
             values.put("node_id", node_id)
-            values.put("lat", lat)
-            values.put("lon", lon)
             values.put("insert_id", insert_id)
             wayNodeValuesList.add(values)
             batchCount++
@@ -163,7 +161,7 @@ class SQLiteWriter (context : Context, databaseName: String, private val commitF
     }
 
     fun insertWayNode(way: Way, node:WayNode){
-        insertWayNode(way.id, node.nodeId, node.latitude, node.longitude, read)
+        insertWayNode(way.id, node.nodeId, read)
     }
 
     fun insertRelation(id : Long, changeset: Long ,version: Int, user:String, uid: Int,  timestamp : Long){
