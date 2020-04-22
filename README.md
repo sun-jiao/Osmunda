@@ -9,9 +9,9 @@ Osmunda is an Android library to uncompress Open Street Map data, write into SQL
 
 Osmunda是一个Android库，读取开放街道地图数据，写入SQLite中，可用于离线地理编码等。
 
-## How to use | 如何使用
+# How to use | 如何使用
 
-### Gradle Settings | Gradle设置
+## Gradle Settings | Gradle设置
 
 #### Step 1. | 第一步
 
@@ -36,21 +36,25 @@ Add the dependency
 	        implementation 'moe.sunjiao:osmunda:1.0.0'
 	}
 
-### Data import | 导入代码
+## Data import | 导入代码
 
   
 
-## OSM data source | 开放街道地图数据源
+# OSM data source | 开放街道地图数据源
 
-## License | 许可证
+# License | 许可证
 
     Copyright (C) 2020 SUN JIAO (https://www.sunjiao.moe)
     Apache License Version 2.0, January 2004
     http://www.apache.org/licenses/
 
 
-## References & Credits | 参考及致谢
+# References & Credits | 参考及致谢
 
 Thanks to [spyhunter99/osmreader](https://github.com/spyhunter99/osmreader), I referred to it, rewrote its core algorithms in kotlin, fixed the Osmosis not work problem, and added reverse geocode features.
 
 感谢[spyhunter99/osmreader](https://github.com/spyhunter99/osmreader)，我参考了该项目，用kotlin重写了它的核心算法，解决了Osmoisis在Android上不工作的问题，并添加了反向地理编码功能。
+
+# My OSM Account | 我的OSM账号
+
+[sun-jiao](https://www.openstreetmap.org/user/sun-jiao)
