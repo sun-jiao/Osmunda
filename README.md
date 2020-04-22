@@ -1,5 +1,7 @@
 # Osmunda
 
+[![](https://jitpack.io/v/moe.sunjiao/osmunda.svg)](https://jitpack.io/#moe.sunjiao/osmunda)
+
 [中文介绍](./ZH-rCN.md)
 
 ## Introduction
