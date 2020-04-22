@@ -35,12 +35,12 @@ Osmunda是一个Android库，读取开放街道地图数据，写入SQLite中，
 	
 	val reader : OsmReader = OsmosisReader() 
 
-设置导入关系和道路数据，不需要的话，直接不写这两行就行了。参见 [性能/提升性能](##提升性能)
+设置导入关系和道路数据，不需要的话，直接不写这两行就行了。参见 [性能/提升性能](#提升性能)
 
 	reader.options.add(ImportOption.INCLUDE_RELATIONS) 
 	reader.options.add(ImportOption.INCLUDE_WAYS) 
 
-设置提交频率，否则将使用默认设置（pbf文件：500,000，xml文件：250,000）。参见 [性能/提升性能](##提升性能)
+设置提交频率，否则将使用默认设置（pbf文件：500,000，xml文件：250,000）。参见 [性能/提升性能](#提升性能)
 
 # 性能
 
