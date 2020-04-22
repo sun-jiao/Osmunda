@@ -5,9 +5,9 @@
 
 # Introduction | 简介
 
-An Android library to uncompress Open Street Map data, write into SQLite, for offline geocoding. 
+Osmunda is an Android library to uncompress Open Street Map data, write into SQLite, for offline geocoding. 
 
-Android库，读取开放街道地图数据，写入SQLite中，可用于离线地理编码等。
+Osmunda是一个Android库，读取开放街道地图数据，写入SQLite中，可用于离线地理编码等。
 
 # OSM data source | 开放街道地图数据源
 
