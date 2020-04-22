@@ -36,17 +36,44 @@ Add the dependency
 	        implementation 'moe.sunjiao:osmunda:1.0.0'
 	}
 
-## Data import | 导入代码
+## Data import | 导入数据
 
-  
+Instantiate an OsmosisReader.
+
+实例化一个OsmosisReader。
+	
+	val reader : OsmReader = OsmosisReader() 
+
+Set import relations and ways data, if you don't need them, don't write these two lines. See [Performance/How to improve](## How to improve | 提升性能)
+
+设置导入关系和道路数据，不需要的话，直接不写这两行就行了。参见 [性能/提升性能](## How to improve | 提升性能)
+
+	reader.options.add(ImportOption.INCLUDE_RELATIONS) 
+	reader.options.add(ImportOption.INCLUDE_WAYS) 
+
+Set commitFrequency, don't set it to keep the default value (500,000 for pbf file, and 250,000 for xml file). See [Performance/How to improve](## How to improve | 提升性能)
+
+设置提交频率，否则将使用默认设置（pbf文件：500,000，xml文件：250,000）。参见 [性能/提升性能](## How to improve | 提升性能)
+
+# Performance | 性能
+
+## Storage | 存储空间
+
+## CPU
+
+## Memory | 内存
+
+## Time | 时间
+
+## How to improve | 提升性能
 
 # OSM data source | 开放街道地图数据源
 
 # License | 许可证
 
-    Copyright (C) 2020 SUN JIAO (https://www.sunjiao.moe)
-    Apache License Version 2.0, January 2004
-    http://www.apache.org/licenses/
+Copyright (C) 2020 SUN JIAO (https://www.sunjiao.moe)
+Apache License Version 2.0, January 2004
+http://www.apache.org/licenses/
 
 
 # References & Credits | 参考及致谢
