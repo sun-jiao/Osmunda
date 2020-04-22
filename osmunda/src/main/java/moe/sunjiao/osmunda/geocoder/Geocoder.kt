@@ -22,7 +22,7 @@ class Geocoder(val database: SQLiteDatabase) {
         val resultList: MutableList<SearchResult> = ArrayList<SearchResult>()
 
         try {
-            val cursor: Cursor = database.rawQuery("SELECT * FROM tag inner join nodes, way_no on tag.id=nodes.id or tag.id=way_no.way_id where k='name' and v like ? and lat > ? and lat < ? and lon >? and lon < ? limit ? offset ?",
+            val cursor: Cursor = database.rawQuery("SELECT * FROM tags inner join nodes, way_nodes on tags.id=nodes.id or tag.id=way_nodes.way_id where k='name' and v like ? and lat > ? and lat < ? and lon >? and lon < ? limit ? offset ?",
                     arrayOf("%$searchQueryOptional%", minLat.toString(), maxLat.toString(), minLon.toString(), maxLon.toString(), limit.toString(), offset.toString()))
 
             while (cursor.moveToNext()) {
