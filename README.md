@@ -2,7 +2,7 @@
 
 [![](https://jitpack.io/v/moe.sunjiao/osmunda.svg)](https://jitpack.io/#moe.sunjiao/osmunda)
 
-[中文介绍](./ZH-rCN.md)
+[中文版](./ZH-rCN.md)
 
 ## Introduction
 
