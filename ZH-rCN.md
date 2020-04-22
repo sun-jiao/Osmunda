@@ -36,11 +36,11 @@ Osmunda是一个Android库，读取开放街道地图数据，写入SQLite中，
 val reader : OsmReader = OsmosisReader() 
 ```
 
-设置导入关系和道路数据，不需要的话，直接不写这两行就行了。参见 [性能/提升性能](#提升性能)
+设置导入关系和道路数据，如无需导入，请不要编写以下代码。参见 [性能/提升性能](#提升性能)
 
 ```kotlin
-reader.options.add(ImportOption.INCLUDE_RELATIONS) 
-reader.options.add(ImportOption.INCLUDE_WAYS) 
+reader.options.add(ImportOption.INCLUDE_RELATIONS)	//导入关系数据
+reader.options.add(ImportOption.INCLUDE_WAYS)		//导入道路数据
 ```
 
 设置提交频率，否则将使用默认设置（pbf文件：500,000，xml文件：250,000）。参见 [性能/提升性能](#提升性能)
@@ -109,6 +109,12 @@ val list3: List<SearchResult> = Geocoder(hubeiDatabase).search("华中师范大�
 
 # 开放街道地图数据网站
 
+[Planet OSM](https://planet.openstreetmap.org/)是所有数据的原始来源，由开放街道地图运营，但其下载速度受限。
+
+可从其它镜像数据网站下载：[网站列表](https://wiki.openstreetmap.org/wiki/Planet.osm)
+
+对于中国用户，我个人推荐[开放街道地图法国社区网站](http://download.openstreetmap.fr/extracts/asia/china/)，其中有中国的分省数据，大大方便了下载和使用。
+
 # 许可证
 
 Copyright (C) 2020 SUN JIAO (https://www.sunjiao.moe)
@@ -119,6 +125,6 @@ http://www.apache.org/licenses/
 
 感谢[spyhunter99/osmreader](https://github.com/spyhunter99/osmreader)，我参考了该项目，用kotlin重写了它的核心算法，解决了Osmoisis在Android上不工作的问题，并添加了反向地理编码功能。
 
-# 我的OSM账号
+# 我的开放街道地图账号
 
-[sun-jiao](https://www.openstreetmap.org/user/sun-jiao)
+[sun-jiao](https://www.openstreetmap.org/user/sun-jiao)，主要活跃于武汉市。
