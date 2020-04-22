@@ -1,7 +1,7 @@
 # Osmunda
-The README in both Chinese and English is complete.
+**The README in both Chinese and English is complete.**
 
-中文和英文版本的README均是完整的。
+**中文和英文版本的README均是完整的。**
 
 # Introduction | 简介
 
