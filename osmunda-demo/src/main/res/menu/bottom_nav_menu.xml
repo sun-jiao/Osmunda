@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:orderInCategory="0"
+        android:id="@+id/navigation_forward"
+        android:icon="@drawable/ic_forward"
+        android:title="@string/nav_forward" />
+
+    <item
+        android:orderInCategory="1"
+        android:id="@+id/navigation_home"
+        android:icon="@drawable/ic_home"
+        android:title="@string/nav_home" />
+
+    <item
+        android:orderInCategory="2"
+        android:id="@+id/navigation_reverse"
+        android:icon="@drawable/ic_reverse"
+        android:title="@string/nav_reverse" />
+
+</menu>

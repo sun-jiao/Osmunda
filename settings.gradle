@@ -1,0 +1,3 @@
+rootProject.name='Osmunda'
+include ':osmunda-demo'
+include ':osmunda'

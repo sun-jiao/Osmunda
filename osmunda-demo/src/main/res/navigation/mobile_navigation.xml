@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/navigation_home">
+
+    <fragment
+        android:id="@+id/navigation_forward"
+        android:name="moe.sunjiao.osmundademo.fragment.ForwardFragment"
+        android:label="@string/title_forward"
+        tools:layout="@layout/fragment_forward" >
+        <action
+            android:id="@+id/action_navigation_forward_to_navigation_home"
+            app:destination="@id/navigation_home" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_home"
+        android:name="moe.sunjiao.osmundademo.fragment.HomeFragment"
+        android:label="@string/title_home"
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_navigation_home_to_navigation_Reverse"
+            app:destination="@id/navigation_reverse" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_reverse"
+        android:name="moe.sunjiao.osmundademo.fragment.ReverseFragment"
+        android:label="@string/title_reverse"
+        tools:layout="@layout/fragment_reverse" >
+        <action
+            android:id="@+id/action_navigation_Reverse_to_navigation_forward"
+            app:destination="@id/navigation_forward" />
+    </fragment>
+</navigation>
