@@ -54,9 +54,13 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
     implementation 'androidx.navigation:navigation-fragment-ktx:2.2.2'
     implementation 'androidx.navigation:navigation-ui-ktx:2.2.2'
+
     implementation 'org.openstreetmap.osmosis:osmosis-core:0.47.3'
     implementation 'org.openstreetmap.osmosis:osmosis-pbf:0.47.3'
     implementation 'org.openstreetmap.osmosis:osmosis-osm-binary:0.47.3'
+    implementation 'org.openstreetmap.osmosis:osmosis-core:0.47.3'
     implementation 'org.openstreetmap.osmosis:osmosis-xml:0.47.3'
+
+    implementation 'org.osmdroid:osmdroid-android:6.1.6'
     implementation project(":osmunda")
 }
