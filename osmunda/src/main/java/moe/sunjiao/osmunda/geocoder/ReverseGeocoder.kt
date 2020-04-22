@@ -15,7 +15,7 @@ class ReverseGeocoder(val database: SQLiteDatabase) {
         lon: String,
         limit: Int,
         offset: Int
-    ): List<SearchResult>?{
+    ): List<SearchResult>{
         val resultList: MutableList<SearchResult> = ArrayList<SearchResult>()
         try {
             val cursor: Cursor = database.rawQuery("SELECT * FROM tag inner join nodes on tag.id=nodes.id where lat > ? -0.1 and lat < ? +0.1 and lon > ? -0.1 and lon < ? +0.1 order by (lat - ?) * (lat - ?) + (lon - ?) * (lon - ?)  asc limit ? offset ? ",
@@ -46,7 +46,7 @@ class ReverseGeocoder(val database: SQLiteDatabase) {
         geoPoint: GeoPoint,
         limit: Int,
         offset: Int
-    ): List<SearchResult>? {
+    ): List<SearchResult> {
         val lat: String = geoPoint.getLatitude().toString()
         val lon: String = geoPoint.getLongitude().toString()
         return search(lat,lon,limit,offset)
@@ -57,7 +57,7 @@ class ReverseGeocoder(val database: SQLiteDatabase) {
         location: Location,
         limit: Int,
         offset: Int
-    ): List<SearchResult>? {
+    ): List<SearchResult> {
         val lat: String = location.getLatitude().toString()
         val lon: String = location.getLongitude().toString()
         return search(lat,lon,limit,offset)
@@ -69,7 +69,7 @@ class ReverseGeocoder(val database: SQLiteDatabase) {
         longitude: Double,
         limit: Int,
         offset: Int
-    ): List<SearchResult>? {
+    ): List<SearchResult> {
         val lat: String = latitude.toString()
         val lon: String = longitude.toString()
         return search(lat,lon,limit,offset)
