@@ -36,12 +36,12 @@ Instantiate an OsmosisReader.
 	
 	val reader : OsmReader = OsmosisReader() 
 
-Set import relations and ways data, if you don't need them, don't write these two lines. See [Performance/How to improve](## How to improve)
+Set import relations and ways data, if you don't need them, don't write these two lines. See [Performance/How to improve](#improve)
 
 	reader.options.add(ImportOption.INCLUDE_RELATIONS) 
 	reader.options.add(ImportOption.INCLUDE_WAYS) 
 
-Set commitFrequency, don't set it to keep the default value (500,000 for pbf file, and 250,000 for xml file). See [Performance/How to improve](## How to improve)
+Set commitFrequency, don't set it to keep the default value (500,000 for pbf file, and 250,000 for xml file). See [Performance/How to improve](#improve)
 
 # Performance
 
@@ -53,7 +53,7 @@ Set commitFrequency, don't set it to keep the default value (500,000 for pbf fil
 
 ## Time
 
-## How to improve
+## Improve
 
 # OSM data website
 
