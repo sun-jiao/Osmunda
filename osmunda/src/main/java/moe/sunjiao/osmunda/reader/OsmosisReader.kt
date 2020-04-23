@@ -36,7 +36,7 @@ class OsmosisReader :OsmReader, Sink {
     var readProportion : Int = 1
     var insertProportion : Int = 1
 
-    var commitFrequency : Int = 500000
+    var commitFrequency : Int = 5000
     private var expectedRecordCount: Double = 0.00
     lateinit var writer : SQLiteWriter
 
@@ -65,10 +65,8 @@ class OsmosisReader :OsmReader, Sink {
             insertProportion = 11
         } else if (file.name.toLowerCase(Locale.ROOT).endsWith(".gz")) {
             reader = XmlReader(file, false, CompressionMethod.GZip)
-            commitFrequency = 250000
         } else if (file.name.toLowerCase(Locale.ROOT).endsWith(".bz2")) {
             reader = XmlReader(file, false, CompressionMethod.BZip2)
-            commitFrequency = 250000
         } else
             throw IllegalArgumentException()
 
