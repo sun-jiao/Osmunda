@@ -47,7 +47,7 @@ reader.options.add(ImportOption.INCLUDE_RELATIONS)	//导入关系数据
 reader.options.add(ImportOption.INCLUDE_WAYS)		//导入道路数据
 ```
 
-设置提交频率，否则将使用默认设置（pbf文件：500,000，xml文件：250,000）。参见 [commitFrequency(提交频率)](#commitFrequency(提交频率))
+设置提交频率，否则将使用默认设置（5,000）。参见 [commitFrequency(提交频率)](#commitFrequency(提交频率))
 
 ```
 (reader as OsmosisReader).commitFrequency = 100000
@@ -154,18 +154,21 @@ val list4: List<SearchResult> = ReverseGeocoder(hubeiDatabase).search(iGeoPoint,
 
 就具体操作而言，pbf文件的读取速度远大于xml格式，读取25万条数据约需要0.3-1秒不等，而读取相同大小的xml数据耗时5-15秒。（可能与读取内容有关，例如way node只有way_id和node_id，其读取速度可能快于有8条属性的node）插入25万条数据耗时4-7秒，与文件格式无关。
 
-就总耗时而言，当commitFrequency设为 5,000 ~ 500,000 时，湖北省的pbf文件导出耗时约2分钟。
-
-当commitFrequency设为 100,000 时，罗德岛的osm.bz2文件导出耗时均约为4分钟。
+就总耗时而言，当commitFrequency设为 1,000 ~ 500,000 时，湖北省的pbf文件导出耗时约2分钟，罗德岛的osm.bz2文件导出耗时均约为4分钟，过低或过高均会导致操作耗时延长，甚至几乎不能完成。
 
 ## 提升性能
 
-#### 
+#### commitFrequency设置
 
 在批量插入之前，所有当前已读取的待插入记录都被存储在内存中，如果commitFrequency过高，将会导致过高的内存占用；而如果commitFrequency过低，则会频繁开关Transaction，导致过高的耗时。
 
-pbf
+commitFrequency的默认值为 5,000，您可以自行修改，还可以在您的应用中根据操作环境设置不同的值。
 
+#### 导入数据控制
+
+您可以根据自己应用的需求，选择是否导入 relation 数据和 way 数据。
+
+以上操作的代码见[导入数据](#导入数据)
 
 # 开放街道地图数据网站
 
