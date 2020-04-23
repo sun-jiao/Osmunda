@@ -23,22 +23,6 @@ class SQLiteWriter (context : Context, databaseName: String, private val commitF
     private var wayNodeValuesList = ArrayList<ContentValues>()
     private var memberValuesList = ArrayList<ContentValues>()
 
-    val list = arrayListOf<ArrayList<ContentValues>>(
-        nodeValuesList,
-        relationValuesList,
-        wayValuesList,
-        tagValuesList,
-        wayNodeValuesList,
-        memberValuesList)
-
-    val names = arrayListOf<String>(
-        "nodes",
-        "relations",
-        "ways",
-        "tag",
-        "way_no",
-        "relation_members")
-
     init{
         database = Osmunda(context).getDatabaseByName(databaseName)
         database.execSQL("CREATE TABLE IF NOT EXISTS \"nodes\" (\"id\" INTEGER PRIMARY KEY  NOT NULL , \"lat\" DOUBLE NOT NULL , \"lon\" DOUBLE NOT NULL , \"version\" INTEGER, \"timestamp\" DATETIME, \"uid\" INTEGER, \"user\" TEXT, \"changeset\" INTEGER)")
@@ -57,6 +41,21 @@ class SQLiteWriter (context : Context, databaseName: String, private val commitF
     fun commit() {
         commitCount ++
         Log.i(TAG , "Start Transaction")
+        val list = arrayListOf<ArrayList<ContentValues>>(
+            nodeValuesList,
+            relationValuesList,
+            wayValuesList,
+            tagValuesList,
+            wayNodeValuesList,
+            memberValuesList)
+
+        val names = arrayListOf<String>(
+            "nodes",
+            "relations",
+            "ways",
+            "tag",
+            "way_no",
+            "relation_members")
 
         database.beginTransaction()
         for ((index, childlist: ArrayList<ContentValues>)  in list.withIndex()){
@@ -64,7 +63,7 @@ class SQLiteWriter (context : Context, databaseName: String, private val commitF
             for (values : ContentValues in childlist){
                 insert++
                 try{
-                    database.insertWithOnConflict(table, null, values, SQLiteDatabase.CONFLICT_IGNORE);
+                    database.insert(table, null, values)
                 } catch (e : SQLiteConstraintException){
                     print(e)
                 }
