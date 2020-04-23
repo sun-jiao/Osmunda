@@ -27,7 +27,7 @@ class Geocoder(val database: SQLiteDatabase) {
 
             while (cursor.moveToNext()) {
                 val type = cursor.getInt(cursor.getColumnIndex("reftype"))
-                val rowType: OsmType = OsmType.values().get(type)
+                val rowType: OsmType = OsmType.values()[type]
                 resultList.add(SearchResult(cursor.getDouble(cursor.getColumnIndex("lat")),
                     cursor.getDouble(cursor.getColumnIndex("lon")),
                     cursor.getString(cursor.getColumnIndex("v")),
