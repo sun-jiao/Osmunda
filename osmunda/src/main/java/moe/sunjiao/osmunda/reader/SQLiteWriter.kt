@@ -29,7 +29,7 @@ class SQLiteWriter (context : Context, databaseName: String, private val commitF
         database.execSQL("CREATE TABLE IF NOT EXISTS \"relation_members\" (\"type\" TEXT NOT NULL , \"member_id\" INTEGER NOT NULL , \"role\" TEXT, \"relation_id\" INTEGER NOT NULL,\"insert_id\" INTEGER NOT NULL, PRIMARY KEY( \"relation_id\",\"member_id\",\"insert_id\" ))")
         database.execSQL("CREATE TABLE IF NOT EXISTS \"relations\" (\"id\" INTEGER PRIMARY KEY  NOT NULL , \"user\" TEXT, \"uid\" INTEGER, \"version\" INTEGER, \"changeset\" INTEGER, \"timestamp\" BIGINT)")
         database.execSQL("CREATE TABLE IF NOT EXISTS \"tag\" (\"id\" INTEGER NOT NULL , \"k\" TEXT NOT NULL , \"v\" TEXT NOT NULL , \"reftype\" INTEGER NOT NULL  DEFAULT -1, PRIMARY KEY( \"reftype\",\"k\" ,\"id\" )   )")
-        database.execSQL("CREATE TABLE IF NOT EXISTS \"way_no\" (\"way_id\" INTEGER NOT NULL , \"node_id\" INTEGER NOT NULL,\"lat\" DOUBLE NOT NULL , \"lon\" DOUBLE NOT NULL ,\"insert_id\" INTEGER NOT NULL,  PRIMARY KEY (\"way_id\", \"node_id\",\"insert_id\")  )  ")
+        database.execSQL("CREATE TABLE IF NOT EXISTS \"way_no\" (\"way_id\" INTEGER NOT NULL , \"node_id\" INTEGER NOT NULL, \"insert_id\" INTEGER NOT NULL,  PRIMARY KEY (\"way_id\", \"node_id\",\"insert_id\")  )  ")
         database.execSQL("CREATE TABLE IF NOT EXISTS \"ways\" (\"id\" INTEGER PRIMARY KEY  NOT NULL , \"changeset\" INTEGER, \"version\" INTEGER, \"user\" TEXT, \"uid\" INTEGER, \"timestamp\" BIGINT)")
     }
 
@@ -40,7 +40,7 @@ class SQLiteWriter (context : Context, databaseName: String, private val commitF
 
     fun commit() {
         commitCount ++
-        Log.i(TAG , "Start Transaction")
+        Log.i(TAG , "Pause read $read Start Transaction $insert")
         val list = arrayListOf<ArrayList<ContentValues>>(
             nodeValuesList,
             relationValuesList,
@@ -72,7 +72,7 @@ class SQLiteWriter (context : Context, databaseName: String, private val commitF
         }
         database.setTransactionSuccessful()
         database.endTransaction()
-        Log.i(TAG , "Stop Transaction")
+        Log.i(TAG , "Stop Transaction $insert continue read $read" )
     }
     private fun translate(type: EntityType): Int {
         return when (type) {
