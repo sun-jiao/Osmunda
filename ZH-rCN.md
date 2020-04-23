@@ -3,7 +3,9 @@
 
 ## 简介
 
-Osmunda是一个Android库，读取开放街道地图数据，写入SQLite中，可用于离线地理编码等。
+*Osmunda*是一个Android库，读取开放街道地图数据（osm.pbf, osm.bz2及osm.gz格式, 后两者本质上都是xml），写入SQLite中，可用于离线地理编码等。
+
+名称为拉丁文，来源于[紫萁属](http://www.iplant.cn/info/Osmunda)的学名，是一类蕨类植物，因其以开放街道地图的英文缩写osm开头而选用作名称。
 
 # 如何使用
 
@@ -30,6 +32,8 @@ Osmunda是一个Android库，读取开放街道地图数据，写入SQLite中，
 
 ## 导入数据
 
+关于数据的获取，参见 [开放街道地图数据网站](#开放街道地图数据网站)
+
 实例化一个OsmosisReader。
 
 ```kotlin
@@ -43,7 +47,7 @@ reader.options.add(ImportOption.INCLUDE_RELATIONS)	//导入关系数据
 reader.options.add(ImportOption.INCLUDE_WAYS)		//导入道路数据
 ```
 
-设置提交频率，否则将使用默认设置（pbf文件：500,000，xml文件：250,000）。参见 [性能/提升性能](#提升性能)
+设置提交频率，否则将使用默认设置（pbf文件：500,000，xml文件：250,000）。参见 [commitFrequency(提交频率)](#commitFrequency(提交频率))
 
 ```
 (reader as OsmosisReader).commitFrequency = 100000
@@ -52,7 +56,7 @@ reader.options.add(ImportOption.INCLUDE_WAYS)		//导入道路数据
 设置OSM数据文件，context和数据库文件名，开始读取。
 
 ```kotlin
-reader.read(File(requireContext().filesDir.absolutePath + "/hubei-latest.osm.pbf"), requireContext(), "hubei" )
+reader.readData(File(requireContext().filesDir.absolutePath + "/hubei-latest.osm.pbf"), requireContext(), "hubei" )
 ```
 
 ## 获取导入状态
@@ -112,23 +116,56 @@ val list4: List<SearchResult> = ReverseGeocoder(hubeiDatabase).search(iGeoPoint,
 
 # 性能
 
+测试机器：Google Pixel 3，Android Q (10.0)
+
+测试文件：hubei.osm.pbf，rhode-island.osm.bz2
+
+以下测试数据均在以上环境中测得。
+
+## commitFrequency(提交频率)
+
+由于读取操作发生在Osmosis库而非本库中，本库中的OsmosisReader类仅在每次Osmosis库读取一个元素后被调用一次process函数，因此无法将所有插入操作包含在同一个Transaction中。
+
+为了避免进行逐条数据插入时频繁开关Transaction造成的高耗时，我在OsmosisReader类中设置了commitFrequency变量，当待插入的记录达到commitFrequency规定的数量时，将会开启一个Transaction进行批量插入操作。
+
 ## 存储空间
 
-湖北省的pbf数据约11.64MiB (17,237,672字节)，其中含有2,417,117个元素，转换为了5,505,162条数据库记录。
+湖北省的pbf文件大小为11.64 MiB (17,237,672 字节)，其中含有2,417,117个元素，转换为5,505,162条数据库记录。
 
-解压出的数据库文件273.91MiB (287,219,712字节)，约为pbf的16.78倍。
+解压出的数据库文件273.91 MiB (287,219,712 字节)，约为pbf的16.78倍。
 
-bz2文件的大小约为相同内容的pbf文件的1.68倍，故解压出的数据库文件大小约为其10倍。
+罗德岛的osm.bz2文件大小为21.9 MiB (23,009,830 字节)，其中含有1,897,371个元素，转换为了4,525,039条数据库记录。
 
-不同区域的文件大小并非「区域越大，数据越多」，还受到当地人口数量、人类聚居地密集程度、经济发展程度影响，还与开放街道地图服务的可用性有关。例如，人口密集、经济发达的广东省拥有73M的数据，而地广人稀的新疆和西藏仅分别有17M和18M的数据（均为pbf格式）。
+解压出的数据库文件198.67 MiB (208,318,464 字节)，约为osm.bz2的9.05倍。
+
+不同区域的文件大小并非「区域越大，数据越多」，还受到当地人口数量、人类聚居地密集程度、经济发展程度影响，还与开放街道地图服务的可用性有关。
+
+例如，人口密集、经济发达的广东省拥有73M的数据，而地广人稀的新疆和西藏仅分别有17M和18M的数据（均为pbf格式）。
 
 ## CPU
 
+数据读取及数据库写入操作的CPU占用约为10%-30%。
+
 ## 内存
+
+数据读取及数据库写入操作的内存占用约为200M-1G。
 
 ## 时间
 
+就具体操作而言，pbf文件的读取速度远大于xml格式，读取25万条数据约需要0.3-1秒不等，而读取相同大小的xml数据耗时5-15秒。（可能与读取内容有关，例如way node只有way_id和node_id，其读取速度可能快于有8条属性的node）插入25万条数据耗时4-7秒，与文件格式无关。
+
+就总耗时而言，当commitFrequency设为 5,000 ~ 500,000 时，湖北省的pbf文件导出耗时约2分钟。
+
+当commitFrequency设为 100,000 时，罗德岛的osm.bz2文件导出耗时均约为4分钟。
+
 ## 提升性能
+
+#### 
+
+在批量插入之前，所有当前已读取的待插入记录都被存储在内存中，如果commitFrequency过高，将会导致过高的内存占用；而如果commitFrequency过低，则会频繁开关Transaction，导致过高的耗时。
+
+pbf
+
 
 # 开放街道地图数据网站
 
