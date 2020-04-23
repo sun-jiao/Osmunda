@@ -93,11 +93,34 @@ val list3: List<SearchResult> = Geocoder(hubeiDatabase).search("华中师范大�
 
 ## 反向地理编码（根据地理坐标搜索地点名称）
 
+使用ReverseGeocoder类的search函数进行搜索，搜索时可以指定在数据库中的LIMIT和OFFSET。
 
+```kotlin
+val list: List<SearchResult> = ReverseGeocoder(hubeiDatabase).search(30.51910, 114.35775, 10, 0)
+```
+
+可以将Android的Location或Osmdroid的GeoPoint及IGeoPoint直接作为参数传入：
+
+```kotlin
+val location : Location = Location(GPS_PROVIDER)
+val list2: List<SearchResult> = ReverseGeocoder(hubeiDatabase).search(location, 100, 0)
+val geoPoint : GeoPoint = GeoPoint(30.51910, 114.35775)
+val list3: List<SearchResult> = ReverseGeocoder(hubeiDatabase).search(geoPoint, 100, 0)
+val iGeoPoint : IGeoPoint = mapView.mapCenter
+val list4: List<SearchResult> = ReverseGeocoder(hubeiDatabase).search(iGeoPoint, 100, 0)
+```
 
 # 性能
 
 ## 存储空间
+
+湖北省的pbf数据约11.64MiB (17,237,672字节)，其中含有2,417,117个元素，转换为了5,505,162条数据库记录。
+
+解压出的数据库文件273.91MiB (287,219,712字节)，约为pbf的16.78倍。
+
+bz2文件的大小约为相同内容的pbf文件的1.68倍，故解压出的数据库文件大小约为其10倍。
+
+不同区域的文件大小并非「区域越大，数据越多」，还受到当地人口数量、人类聚居地密集程度、经济发展程度影响，还与开放街道地图服务的可用性有关。例如，人口密集、经济发达的广东省拥有73M的数据，而地广人稀的新疆和西藏仅分别有17M和18M的数据（均为pbf格式）。
 
 ## CPU
 
