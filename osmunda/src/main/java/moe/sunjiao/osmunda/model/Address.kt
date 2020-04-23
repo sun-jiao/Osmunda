@@ -2,6 +2,7 @@ package moe.sunjiao.osmunda.model
 
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
+import android.util.Log
 
 class Address(val name: String, databaseId: Long, database: SQLiteDatabase) {
     var state: String = ""
@@ -10,15 +11,13 @@ class Address(val name: String, databaseId: Long, database: SQLiteDatabase) {
     var housenumber: String = ""
 
     var fullAddress: String = ""
-    var address_source: String = ""
     var country: String = ""
     var county: String = ""
     var housename: String = ""
     var unit: String = ""
     var street: String = ""
-    var street_1: String = ""
-    var street_2: String = ""
-    var street_3: String = ""
+    var operator: String = ""
+    var district: String = ""
 
     var phone: String = ""
     var website: String = ""
@@ -27,6 +26,7 @@ class Address(val name: String, databaseId: Long, database: SQLiteDatabase) {
         try {
             val tag: Cursor = database.query("tag", arrayOf("k,v"), "id=?", arrayOf(databaseId.toString()), null, null, null, null)
             while (tag.moveToNext()) {
+                Log.i(tag.getString(0), tag.getString(1))
                 if ("phone".equals(tag.getString(0), ignoreCase = true)) {
                     phone = tag.getString(1)
                 } else if ("contact:phone".equals(tag.getString(0), ignoreCase = true)) {
@@ -68,11 +68,11 @@ class Address(val name: String, databaseId: Long, database: SQLiteDatabase) {
                 } else if ("addr:unit".equals(tag.getString(0), ignoreCase = true)) {
                     unit = tag.getString(1)
                 } else if ("addr:street_1".equals(tag.getString(0), ignoreCase = true)) {
-                    street_1 = tag.getString(1)
+                    street = tag.getString(1)
                 } else if ("addr:street_2".equals(tag.getString(0), ignoreCase = true)) {
-                    street_2 = tag.getString(1)
+                    street = tag.getString(1)
                 } else if ("addr:street_3".equals(tag.getString(0), ignoreCase = true)) {
-                    street_3 = tag.getString(1)
+                    street = tag.getString(1)
                 } else if ("gnis:country_name".equals(tag.getString(0), ignoreCase = true)) {
                     country = tag.getString(1)
                 } else if ("addr:country".equals(tag.getString(0), ignoreCase = true)) {
@@ -81,15 +81,20 @@ class Address(val name: String, databaseId: Long, database: SQLiteDatabase) {
                     country = tag.getString(1)
                 } else if ("is_in:country_code".equals(tag.getString(0), ignoreCase = true)) {
                     country = tag.getString(1)
+                } else if ("operator".equals(tag.getString(0), ignoreCase = true)) {
+                    operator = tag.getString(1)
+                } else if ("addr:district".equals(tag.getString(0), ignoreCase = true)) {
+                    district = tag.getString(1)
+                } else if ("neighbourhood".equals(tag.getString(0), ignoreCase = true)) {
+                    operator = tag.getString(1)
                 }
             }
             tag.close()
-
-            
         } catch (ex: Exception) {
             throw ex
         } finally {
-            fullAddress = name + ", " + housenumber + ", " + housename + ", " + street_3 + ", " + street_2 + ", " + street_1 + ", " + street + ", " + county + ", " + city + ", " + state + ", " + country + " (" + postcode + ", " + phone + ", " + website + ")"
+            fullAddress =
+                "$name ($housename), $housenumber, $street, $county, $city, $state, $country ($postcode)"
         }
     }
 

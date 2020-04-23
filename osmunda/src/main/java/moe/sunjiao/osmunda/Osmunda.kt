@@ -2,7 +2,6 @@ package moe.sunjiao.osmunda
 
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
-import android.util.Log
 import java.io.File
 import java.util.*
 
