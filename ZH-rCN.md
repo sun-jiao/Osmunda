@@ -180,8 +180,8 @@ commitFrequency的默认值为 5,000，您可以自行修改，还可以在您�
 
 # 许可证
 
-Copyright (C) 2020 SUN JIAO (https://www.sunjiao.moe)
-Apache License Version 2.0, January 2004
+Copyright (C) 2020 SUN JIAO (https://www.sunjiao.moe)<br/>
+Apache License Version 2.0, January 2004<br/>
 http://www.apache.org/licenses/
 
 # 参考及致谢
