@@ -24,7 +24,7 @@ class ReverseGeocoder(val database: SQLiteDatabase) {
         val resultList: MutableList<SearchResult> = ArrayList<SearchResult>()
         try {
             database.beginTransaction()
-            val cursorNode: Cursor = database.rawQuery("SELECT * FROM tag inner join nodes on tag.id=nodes.id where k=\"name\" and lat > ? -0.1 and lat < ? +0.1 and lon > ? -0.1 and lon < ? +0.1 order by (lat - ?) * (lat - ?) + (lon - ?) * (lon - ?)  asc limit ? offset ? ",
+            val cursorNode: Cursor = database.rawQuery("SELECT * FROM tag inner join nodes on tag.id=nodes.id where k like \"name\" and lat > ? -0.1 and lat < ? +0.1 and lon > ? -0.1 and lon < ? +0.1 group by tag.id order by (lat - ?) * (lat - ?) + (lon - ?) * (lon - ?)  asc limit ? offset ? ",
                 arrayOf(lat, lat, lon, lon, lat, lat, lon, lon, (limit/2).toString(),offset.toString()))
             while (cursorNode.moveToNext()) {
                 val type = cursorNode.getInt(cursorNode.getColumnIndex("reftype"))
@@ -39,7 +39,7 @@ class ReverseGeocoder(val database: SQLiteDatabase) {
                 )
             }
             cursorNode.close()
-            val cursorWay :Cursor = database.rawQuery("SELECT * FROM tag inner join nodes, way_no on tag.id=way_no.way_id and way_no.node_id=nodes.id where k=\"name\" and lat > ? -0.1 and lat < ? +0.1 and lon > ? -0.1 and lon < ? +0.1 group by tag.id order by (lat - ?) * (lat - ?) + (lon - ?) * (lon - ?)  asc limit ? offset ? ",
+            val cursorWay :Cursor = database.rawQuery("SELECT * FROM tag inner join nodes, way_no on tag.id=way_no.way_id and way_no.node_id=nodes.id where k like \"name\" and lat > ? -0.1 and lat < ? +0.1 and lon > ? -0.1 and lon < ? +0.1 group by tag.id order by (lat - ?) * (lat - ?) + (lon - ?) * (lon - ?)  asc limit ? offset ? ",
                 arrayOf(lat, lat, lon, lon, lat, lat, lon, lon, (limit/2).toString(),offset.toString()))
             while (cursorWay.moveToNext()) {
                 val type = cursorWay.getInt(cursorWay.getColumnIndex("reftype"))
