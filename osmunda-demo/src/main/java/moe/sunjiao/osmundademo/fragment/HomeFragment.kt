@@ -5,6 +5,8 @@ import android.content.ContentResolver
 import android.content.Context
 import android.content.Intent
 import android.database.sqlite.SQLiteDatabase
+import android.location.Location
+import android.location.LocationManager.GPS_PROVIDER
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
@@ -27,6 +29,9 @@ import moe.sunjiao.osmunda.model.SearchResult
 import moe.sunjiao.osmunda.reader.OsmReader
 import moe.sunjiao.osmunda.reader.OsmosisReader
 import moe.sunjiao.osmundademo.R
+import org.osmdroid.api.IGeoPoint
+import org.osmdroid.util.GeoPoint
+import org.osmdroid.views.MapView
 import java.io.File
 import java.util.*
 
@@ -46,24 +51,26 @@ class HomeFragment : Fragment() {
         val thread = Thread(Runnable {
             val hubeiDatabase: SQLiteDatabase = Osmunda(requireContext()).getDatabaseByName("hubei")
             val list: List<SearchResult> =
-                Geocoder(hubeiDatabase).search("华中师范大学", 100, 0, 30.7324, 114.6589, 30.3183, 114.0588)
-                //ReverseGeocoder(hubeiDatabase).search(30.51910, 114.35775, 100, 0)
+                //Geocoder(hubeiDatabase).search("华中师范大学", 100, 0, 30.7324, 114.6589, 30.3183, 114.0588)
+                ReverseGeocoder(hubeiDatabase).search(30.51910, 114.35775, 100, 0)
+
             for (result in list) {
                 val address = result.toAddress
                 Log.i(TAG, result.name + "  " + result.databaseId + "  " + address.fullAddress)
             }
         })
-        thread.start()
-        val file = File(context?.filesDir?.absolutePath+ "/nauru-latest.osm.bz2")
+        val file = File(requireContext().filesDir.absolutePath+ "/rhode-island-latest.osm.bz2")
 
-        //val thread = Thread(Runnable { context?.let { reader.readData(file, it, "nauru") } })
+        val readThread = Thread(Runnable { reader.readData(file, requireContext(), "rhodeitest4") })
+        readThread.start()
 
         val listener : OnClickListener = OnClickListener {
-            val intent = Intent()
-            intent.type = "*/*"
+            /*val intent = Intent()
+            intent.type = "*//*"
             intent.action = Intent.ACTION_GET_CONTENT;
-            startActivityForResult(Intent.createChooser(intent, "Select Osm Source File"), 100);
-            }
+            startActivityForResult(Intent.createChooser(intent, "Select Osm Source File"), 100);*/
+            thread.start()
+        }
         thisView.findViewById<ImageButton?>(R.id.import_button)?.setOnClickListener(listener)
         return thisView
     }
