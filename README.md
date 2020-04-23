@@ -8,6 +8,10 @@
 
 Osmunda is an Android library to uncompress Open Street Map data, write into SQLite, for offline geocoding. 
 
+## Development Status
+
+Still in work.
+
 # How to use
 
 ## Gradle Settings
