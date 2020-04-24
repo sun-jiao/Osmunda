@@ -71,9 +71,13 @@ class Address(val name: String, databaseId: Long, database: SQLiteDatabase, val 
                     country = value
                 } else if (ifStatement.neighbourhood(neighbourhood, key, value)) {
                     neighbourhood = value
+                } else if (ifStatement.town(town, key, value)){
+                    town = value
                 }
             }
             tag.close()
+            val sqliteStatement = SQLiteStatement(locale)
+
             if (country == ""){
                 val cursor: Cursor = database.rawQuery("SELECT * FROM tag inner join nodes, way_no on tag.id=way_no.way_id and way_no.node_id=nodes.id where k like '%country' group by tag.id order by (lat - ?) * (lat - ?) + (lon - ?) * (lon - ?)  asc limit 1 ",
                     arrayOf(lat, lat, lon, lon))
@@ -89,15 +93,17 @@ class Address(val name: String, databaseId: Long, database: SQLiteDatabase, val 
                 cursor.close()
             }
             if (city == ""){
-                val cursor: Cursor = database.rawQuery("SELECT * FROM tag inner join nodes, way_no on tag.id=way_no.way_id and way_no.node_id=nodes.id where k like '%city' group by tag.id order by (lat - ?) * (lat - ?) + (lon - ?) * (lon - ?)  asc limit 1 ",
+                val where_city = sqliteStatement.city
+                val cursor: Cursor = database.rawQuery("SELECT * FROM tag inner join nodes, way_no on tag.id=way_no.way_id and way_no.node_id=nodes.id where $where_city group by tag.id order by (lat - ?) * (lat - ?) + (lon - ?) * (lon - ?)  asc limit 1 ",
                     arrayOf(lat, lat, lon, lon))
                 if (cursor.moveToNext())
                     city = cursor.getString(cursor.getColumnIndex("v"))
                 cursor.close()
             }
             if (county == ""){
+                val where_county_way = sqliteStatement.county_way
                 val list = arrayListOf<result>()
-                val cursor: Cursor = database.rawQuery("SELECT * FROM tag inner join nodes, way_no on tag.id=way_no.way_id and way_no.node_id=nodes.id where k like '%county' or k like '%district' group by tag.id order by (lat - ?) * (lat - ?) + (lon - ?) * (lon - ?)  asc limit 1 ",
+                val cursor: Cursor = database.rawQuery("SELECT * FROM tag inner join nodes, way_no on tag.id=way_no.way_id and way_no.node_id=nodes.id where $where_county_way group by tag.id order by (lat - ?) * (lat - ?) + (lon - ?) * (lon - ?)  asc limit 1 ",
                     arrayOf(lat, lat, lon, lon))
                 if (cursor.moveToNext())
                 list.add(result(
@@ -105,7 +111,8 @@ class Address(val name: String, databaseId: Long, database: SQLiteDatabase, val 
                     cursor.getDouble(cursor.getColumnIndex("lat")),
                     cursor.getDouble(cursor.getColumnIndex("lon"))))
                 cursor.close()
-                val cursor2: Cursor = database.rawQuery("SELECT * FROM tag inner join nodes on tag.id=nodes.id where (k = 'place' and (v = 'county' or v = 'district')) or (k = 'china_class' and ( v = 'xian')) group by tag.id order by (lat - ?) * (lat - ?) + (lon - ?) * (lon - ?)  asc limit 1 ",
+                val where_county_node = sqliteStatement.county_node
+                val cursor2: Cursor = database.rawQuery("SELECT * FROM tag inner join nodes on tag.id=nodes.id where $where_county_node group by tag.id order by (lat - ?) * (lat - ?) + (lon - ?) * (lon - ?)  asc limit 1 ",
                     arrayOf( lat, lat, lon, lon))
                 if (cursor2.moveToNext()){
                     val id = cursor2.getLong(cursor2.getColumnIndex("id"))
@@ -124,8 +131,9 @@ class Address(val name: String, databaseId: Long, database: SQLiteDatabase, val 
                 county = list[0].name
             }
             if (town == ""){
+                val where_town_way = sqliteStatement.town_way
                 val list = arrayListOf<result>()
-                val cursor: Cursor = database.rawQuery("SELECT * FROM tag inner join nodes, way_no on tag.id=way_no.way_id and way_no.node_id=nodes.id where k like '%town' group by tag.id order by (lat - ?) * (lat - ?) + (lon - ?) * (lon - ?)  asc limit 1 ",
+                val cursor: Cursor = database.rawQuery("SELECT * FROM tag inner join nodes, way_no on tag.id=way_no.way_id and way_no.node_id=nodes.id where $where_town_way group by tag.id order by (lat - ?) * (lat - ?) + (lon - ?) * (lon - ?)  asc limit 1 ",
                     arrayOf(lat, lat, lon, lon))
                 if (cursor.moveToNext())
                     list.add(result(
@@ -133,7 +141,8 @@ class Address(val name: String, databaseId: Long, database: SQLiteDatabase, val 
                         cursor.getDouble(cursor.getColumnIndex("lat")),
                         cursor.getDouble(cursor.getColumnIndex("lon"))))
                 cursor.close()
-                val cursor2: Cursor = database.rawQuery("SELECT * FROM tag inner join nodes on tag.id=nodes.id where (k = 'place' and v = 'town') or (k = 'china_class' and ( v = 'zhen' or v = 'xiang' or v = 'jiedao')) group by tag.id order by (lat - ?) * (lat - ?) + (lon - ?) * (lon - ?)  asc limit 1 ",
+                val where_town_node = sqliteStatement.town_node
+                val cursor2: Cursor = database.rawQuery("SELECT * FROM tag inner join nodes on tag.id=nodes.id where $where_town_node group by tag.id order by (lat - ?) * (lat - ?) + (lon - ?) * (lon - ?)  asc limit 1 ",
                     arrayOf( lat, lat, lon, lon))
                 if (cursor2.moveToNext()){
                     val id = cursor2.getLong(cursor2.getColumnIndex("id"))
@@ -152,8 +161,9 @@ class Address(val name: String, databaseId: Long, database: SQLiteDatabase, val 
                 town = list[0].name
             }
             if (neighbourhood == ""){
+                val where_neighbourhood_way = sqliteStatement.neighbourhood_way
                 val list = arrayListOf<result>()
-                val cursor: Cursor = database.rawQuery("SELECT * FROM tag inner join nodes, way_no on tag.id=way_no.way_id and way_no.node_id=nodes.id where k like '%neighbourhood' or k like '%village' or k = 'operator' group by tag.id order by (lat - ?) * (lat - ?) + (lon - ?) * (lon - ?)  asc limit 1 ",
+                val cursor: Cursor = database.rawQuery("SELECT * FROM tag inner join nodes, way_no on tag.id=way_no.way_id and way_no.node_id=nodes.id where $where_neighbourhood_way group by tag.id order by (lat - ?) * (lat - ?) + (lon - ?) * (lon - ?)  asc limit 1 ",
                     arrayOf(lat, lat, lon, lon))
                 if (cursor.moveToNext())
                     list.add(result(
@@ -161,7 +171,8 @@ class Address(val name: String, databaseId: Long, database: SQLiteDatabase, val 
                         cursor.getDouble(cursor.getColumnIndex("lat")),
                         cursor.getDouble(cursor.getColumnIndex("lon"))))
                 cursor.close()
-                val cursor2: Cursor = database.rawQuery("SELECT * FROM tag inner join nodes on tag.id=nodes.id where ((k = 'place' or k = 'china_class')and (v = 'neighbourhood' or v = 'village')) group by tag.id order by (lat - ?) * (lat - ?) + (lon - ?) * (lon - ?)  asc limit 1 ",
+                val where_neighbourhood_node = sqliteStatement.neighbourhood_node
+                val cursor2: Cursor = database.rawQuery("SELECT * FROM tag inner join nodes on tag.id=nodes.id where $where_neighbourhood_node group by tag.id order by (lat - ?) * (lat - ?) + (lon - ?) * (lon - ?)  asc limit 1 ",
                     arrayOf( lat, lat, lon, lon))
                 if (cursor2.moveToNext()){
                     val id = cursor2.getLong(cursor2.getColumnIndex("id"))
@@ -189,7 +200,9 @@ class Address(val name: String, databaseId: Long, database: SQLiteDatabase, val 
                 housenumber = "$housenumber, "
             if(postcode != "")
                 postcode = " ($postcode)"
-            fullAddress = "$name$housename, $neighbourhood, $housenumber$street, $town, $county, $city, $state, $country$postcode"
+            if (street != "")
+                street = "$street, "
+            fullAddress = "$name$housename, $neighbourhood, $housenumber$street$town, $county, $city, $state, $country$postcode"
             Log.i(TAG, "$name  $databaseId  $fullAddress")
         }
     }
