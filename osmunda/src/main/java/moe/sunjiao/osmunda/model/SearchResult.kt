@@ -10,5 +10,5 @@ class SearchResult (
     val database: SQLiteDatabase,
     val databaseId: Long
 ){
-    val toAddress = Address(this)
+    val toAddress : () -> Address = { Address(this)}
 }
