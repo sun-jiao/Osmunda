@@ -14,8 +14,8 @@ class ReverseGeocoder(val database: SQLiteDatabase) {
     fun search(
         latitude: Double,
         longitude: Double,
-        limit: Int,
-        offset: Int
+        limit: Int = 1,
+        offset: Int = 0
     ): List<SearchResult>{
         if (latitude > 90.00 || latitude < -90.00 || longitude > 180.00 || longitude < -180.00 || limit < 0 || offset < 0)
             throw IllegalArgumentException()
@@ -25,7 +25,7 @@ class ReverseGeocoder(val database: SQLiteDatabase) {
         try {
             database.beginTransaction()
             val cursorNode: Cursor = database.rawQuery("SELECT * FROM tag inner join nodes on tag.id=nodes.id where k = \"name\" and lat > ? -0.1 and lat < ? +0.1 and lon > ? -0.1 and lon < ? +0.1 group by tag.id order by (lat - ?) * (lat - ?) + (lon - ?) * (lon - ?)  asc limit ? offset ? ",
-                arrayOf(lat, lat, lon, lon, lat, lat, lon, lon, (limit/2).toString(),offset.toString()))
+                arrayOf(lat, lat, lon, lon, lat, lat, lon, lon, limit.toString(),offset.toString()))
             while (cursorNode.moveToNext()) {
                 val type = cursorNode.getInt(cursorNode.getColumnIndex("reftype"))
                 val rowType: OsmType = OsmType.values()[type]
@@ -40,7 +40,7 @@ class ReverseGeocoder(val database: SQLiteDatabase) {
             }
             cursorNode.close()
             val cursorWay :Cursor = database.rawQuery("SELECT * FROM tag inner join nodes, way_no on tag.id=way_no.way_id and way_no.node_id=nodes.id where k = \"name\" and lat > ? -0.1 and lat < ? +0.1 and lon > ? -0.1 and lon < ? +0.1 group by tag.id order by (lat - ?) * (lat - ?) + (lon - ?) * (lon - ?)  asc limit ? offset ? ",
-                arrayOf(lat, lat, lon, lon, lat, lat, lon, lon, (limit/2).toString(),offset.toString()))
+                arrayOf(lat, lat, lon, lon, lat, lat, lon, lon, limit.toString(),offset.toString()))
             while (cursorWay.moveToNext()) {
                 val type = cursorWay.getInt(cursorWay.getColumnIndex("reftype"))
                 val rowType: OsmType = OsmType.values()[type]
@@ -66,8 +66,8 @@ class ReverseGeocoder(val database: SQLiteDatabase) {
     @Throws(Exception::class)
     fun search(
         geoPoint: GeoPoint,
-        limit: Int,
-        offset: Int
+        limit: Int = 1,
+        offset: Int = 0
     ): List<SearchResult> {
         val lat: Double = geoPoint.latitude
         val lon: Double = geoPoint.longitude
@@ -77,8 +77,8 @@ class ReverseGeocoder(val database: SQLiteDatabase) {
     @Throws(Exception::class)
     fun search(
         iGeoPoint: IGeoPoint,
-        limit: Int,
-        offset: Int
+        limit: Int = 1,
+        offset: Int = 0
     ): List<SearchResult> {
         val lat: Double = iGeoPoint.latitude
         val lon: Double = iGeoPoint.longitude
@@ -88,8 +88,8 @@ class ReverseGeocoder(val database: SQLiteDatabase) {
     @Throws(Exception::class)
     fun search(
         location: Location,
-        limit: Int,
-        offset: Int
+        limit: Int = 1,
+        offset: Int = 0
     ): List<SearchResult> {
         val lat: Double = location.latitude
         val lon: Double = location.longitude
