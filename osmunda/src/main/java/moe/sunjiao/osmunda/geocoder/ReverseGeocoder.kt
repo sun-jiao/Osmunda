@@ -56,7 +56,7 @@ class ReverseGeocoder(val database: SQLiteDatabase) {
             database.endTransaction()
             resultList.sortBy { (it.lat - latitude) * (it.lat - latitude) + (it.lon - longitude) * (it.lon - longitude) }
         } catch (ex: Exception) {
-            throw ex
+            print( ex)
         } finally {
 
         }
