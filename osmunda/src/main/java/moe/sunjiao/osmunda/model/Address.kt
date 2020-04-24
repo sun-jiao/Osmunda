@@ -151,6 +151,62 @@ class Address(val name: String, databaseId: Long, database: SQLiteDatabase, val 
                 list.sortBy { (it.lat - latitude) * (it.lat - latitude) + (it.lon - longitude) * (it.lon - longitude) }
                 town = list[0].name
             }
+            if (suburb == ""){
+                val list = arrayListOf<result>()
+                val cursor: Cursor = database.rawQuery("SELECT * FROM tag inner join nodes, way_no on tag.id=way_no.way_id and way_no.node_id=nodes.id where k like '%suburb' group by tag.id order by (lat - ?) * (lat - ?) + (lon - ?) * (lon - ?)  asc limit 1 ",
+                    arrayOf(lat, lat, lon, lon))
+                if (cursor.moveToNext())
+                    list.add(result(
+                        cursor.getString(cursor.getColumnIndex("v")),
+                        cursor.getDouble(cursor.getColumnIndex("lat")),
+                        cursor.getDouble(cursor.getColumnIndex("lon"))))
+                cursor.close()
+                val cursor2: Cursor = database.rawQuery("SELECT * FROM tag inner join nodes on tag.id=nodes.id where k = 'place' and v = 'suburb' group by tag.id order by (lat - ?) * (lat - ?) + (lon - ?) * (lon - ?)  asc limit 1 ",
+                    arrayOf( lat, lat, lon, lon))
+                if (cursor2.moveToNext()){
+                    val id = cursor2.getLong(cursor2.getColumnIndex("id"))
+                    val cursor3: Cursor = database.rawQuery("SELECT * FROM tag where id = $id and k = 'name' ", null)
+                    if (cursor3.moveToNext())
+                        list.add(
+                            result(
+                                cursor3.getString(cursor3.getColumnIndex("v")),
+                                cursor2.getDouble(cursor2.getColumnIndex("lat")),
+                                cursor2.getDouble(cursor2.getColumnIndex("lon")))
+                        )
+                    cursor3.close()
+                }
+                cursor2.close()
+                list.sortBy { (it.lat - latitude) * (it.lat - latitude) + (it.lon - longitude) * (it.lon - longitude) }
+                suburb = list[0].name
+            }
+            if (neighbourhood == ""){
+                val list = arrayListOf<result>()
+                val cursor: Cursor = database.rawQuery("SELECT * FROM tag inner join nodes, way_no on tag.id=way_no.way_id and way_no.node_id=nodes.id where k like '%neighbourhood' or k like '%village' or k = 'operator' group by tag.id order by (lat - ?) * (lat - ?) + (lon - ?) * (lon - ?)  asc limit 1 ",
+                    arrayOf(lat, lat, lon, lon))
+                if (cursor.moveToNext())
+                    list.add(result(
+                        cursor.getString(cursor.getColumnIndex("v")),
+                        cursor.getDouble(cursor.getColumnIndex("lat")),
+                        cursor.getDouble(cursor.getColumnIndex("lon"))))
+                cursor.close()
+                val cursor2: Cursor = database.rawQuery("SELECT * FROM tag inner join nodes on tag.id=nodes.id where ((k = 'place' or k = 'china_class')and (v = 'neighbourhood' or v = 'village')) group by tag.id order by (lat - ?) * (lat - ?) + (lon - ?) * (lon - ?)  asc limit 1 ",
+                    arrayOf( lat, lat, lon, lon))
+                if (cursor2.moveToNext()){
+                    val id = cursor2.getLong(cursor2.getColumnIndex("id"))
+                    val cursor3: Cursor = database.rawQuery("SELECT * FROM tag where id = $id and k = 'name' ", null)
+                    if (cursor3.moveToNext())
+                        list.add(
+                            result(
+                                cursor3.getString(cursor3.getColumnIndex("v")),
+                                cursor2.getDouble(cursor2.getColumnIndex("lat")),
+                                cursor2.getDouble(cursor2.getColumnIndex("lon")))
+                        )
+                    cursor3.close()
+                }
+                cursor2.close()
+                list.sortBy { (it.lat - latitude) * (it.lat - latitude) + (it.lon - longitude) * (it.lon - longitude) }
+                neighbourhood = list[0].name
+            }
             database.setTransactionSuccessful()
             database.endTransaction()
         } catch (ex: Exception) {
