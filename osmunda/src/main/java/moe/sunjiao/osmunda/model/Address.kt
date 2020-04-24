@@ -18,7 +18,6 @@ class Address(val name: String, databaseId: Long, database: SQLiteDatabase, val 
     var county: String = ""
     var housename: String = ""
     var street: String = ""
-    var suburb: String = ""
     var neighbourhood: String = ""
     var town: String = ""
 
@@ -38,13 +37,14 @@ class Address(val name: String, databaseId: Long, database: SQLiteDatabase, val 
                     val cursor1: Cursor = database.rawQuery("SELECT * FROM tag inner join nodes, way_no on tag.id=way_no.way_id and way_no.node_id=nodes.id where k like '%country_code' group by tag.id order by (lat - ?) * (lat - ?) + (lon - ?) * (lon - ?)  asc limit 1 ",
                         arrayOf(lat, lat, lon, lon))
                     if (cursor1.moveToNext())
-                        locale = Locale( cursor1.getString(cursor1.getColumnIndex("v")))
+                        locale = Locale(cursor1.getString(cursor1.getColumnIndex("v")))
                     else
                         locale = Locale.ROOT
                     cursor1.close()
                 }
                 cursor.close()
             }
+            val ifStatement : IfStatement = IfStatement(locale)
             val tag: Cursor = database.query("tag", arrayOf("k,v"), "id = ?", arrayOf(databaseId.toString()), null, null, null, null)
             while (tag.moveToNext()) {
                 val key : String = tag.getString(0).toLowerCase(Locale.ROOT)
@@ -53,7 +53,7 @@ class Address(val name: String, databaseId: Long, database: SQLiteDatabase, val 
                     phone = value
                 } else if (website == "" && (key == "website" || key.endsWith(":website"))) {
                     website = value
-                } else if (key == "city" || key.endsWith(":city")) {
+                } else if (ifStatement.city(city, key, value)) {
                     city = value
                 } else if (key == "province" || key.endsWith(":state") || key.endsWith(":province")) {
                     state = value
@@ -63,13 +63,13 @@ class Address(val name: String, databaseId: Long, database: SQLiteDatabase, val 
                     housename = value
                 } else if (key.endsWith("postcode")) {
                     postcode = value
-                } else if (key.endsWith("_name") || key.endsWith("county") || key.endsWith("district")) {
+                } else if (ifStatement.county(county, key, value)) {
                     county = value
                 } else if (key.startsWith("addr:street") || key == "street:addr") {
                     street = value
                 } else if (key == "gnis:country_name" || key.endsWith("country")) {
                     country = value
-                } else if ("operator" == key || (neighbourhood == "" && key.endsWith("neighbourhood"))) {
+                } else if (ifStatement.neighbourhood(neighbourhood, key, value)) {
                     neighbourhood = value
                 }
             }
@@ -151,34 +151,6 @@ class Address(val name: String, databaseId: Long, database: SQLiteDatabase, val 
                 list.sortBy { (it.lat - latitude) * (it.lat - latitude) + (it.lon - longitude) * (it.lon - longitude) }
                 town = list[0].name
             }
-            if (suburb == ""){
-                val list = arrayListOf<result>()
-                val cursor: Cursor = database.rawQuery("SELECT * FROM tag inner join nodes, way_no on tag.id=way_no.way_id and way_no.node_id=nodes.id where k like '%suburb' group by tag.id order by (lat - ?) * (lat - ?) + (lon - ?) * (lon - ?)  asc limit 1 ",
-                    arrayOf(lat, lat, lon, lon))
-                if (cursor.moveToNext())
-                    list.add(result(
-                        cursor.getString(cursor.getColumnIndex("v")),
-                        cursor.getDouble(cursor.getColumnIndex("lat")),
-                        cursor.getDouble(cursor.getColumnIndex("lon"))))
-                cursor.close()
-                val cursor2: Cursor = database.rawQuery("SELECT * FROM tag inner join nodes on tag.id=nodes.id where k = 'place' and v = 'suburb' group by tag.id order by (lat - ?) * (lat - ?) + (lon - ?) * (lon - ?)  asc limit 1 ",
-                    arrayOf( lat, lat, lon, lon))
-                if (cursor2.moveToNext()){
-                    val id = cursor2.getLong(cursor2.getColumnIndex("id"))
-                    val cursor3: Cursor = database.rawQuery("SELECT * FROM tag where id = $id and k = 'name' ", null)
-                    if (cursor3.moveToNext())
-                        list.add(
-                            result(
-                                cursor3.getString(cursor3.getColumnIndex("v")),
-                                cursor2.getDouble(cursor2.getColumnIndex("lat")),
-                                cursor2.getDouble(cursor2.getColumnIndex("lon")))
-                        )
-                    cursor3.close()
-                }
-                cursor2.close()
-                list.sortBy { (it.lat - latitude) * (it.lat - latitude) + (it.lon - longitude) * (it.lon - longitude) }
-                suburb = list[0].name
-            }
             if (neighbourhood == ""){
                 val list = arrayListOf<result>()
                 val cursor: Cursor = database.rawQuery("SELECT * FROM tag inner join nodes, way_no on tag.id=way_no.way_id and way_no.node_id=nodes.id where k like '%neighbourhood' or k like '%village' or k = 'operator' group by tag.id order by (lat - ?) * (lat - ?) + (lon - ?) * (lon - ?)  asc limit 1 ",
@@ -217,7 +189,7 @@ class Address(val name: String, databaseId: Long, database: SQLiteDatabase, val 
                 housenumber = "$housenumber, "
             if(postcode != "")
                 postcode = " ($postcode)"
-            fullAddress = "$name$housename, $neighbourhood, $housenumber$street, $suburb, $town, $county, $city, $state, $country$postcode"
+            fullAddress = "$name$housename, $neighbourhood, $housenumber$street, $town, $county, $city, $state, $country$postcode"
             Log.i(TAG, "$name  $databaseId  $fullAddress")
         }
     }
@@ -232,13 +204,13 @@ class Address(val name: String, databaseId: Long, database: SQLiteDatabase, val 
 * value                     in raw data                   var of this class
 * neighbourhood             有时候是小区，有时候是社区       【小区、学校、自然村等】
 * village                   村
-* suburb                    社区                          【社区】
+* suburb                    社区
 * town                      有时候是街道                   【乡镇、街道】
-* city_district district    市辖区                         无（区县统一为county）
+* city_district district    市辖区
 * county                    区、县                         【区、县】
 * city                      街道, 区县，市                  【所有名字里带「市」的，直辖市除外，因为程序无法分辨不同的市】
-* region                    有的地级市用region表示。         无（市统一为city）
-* state_district            省辖区，地区级，地级市           无（市统一为city）
+* region                    有的地级市用region表示。
+* state_district            省辖区，地区级，地级市
 * state province            省，这个是确定的                【省:统一为state】
 * country country_code      这两个表示国家是确定的           【国家，没啥好解释的】
 *
