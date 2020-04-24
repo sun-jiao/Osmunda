@@ -49,7 +49,7 @@ class Address(val name: String, databaseId: Long, database: SQLiteDatabase, val 
             while (tag.moveToNext()) {
                 val key : String = tag.getString(0).toLowerCase(Locale.ROOT)
                 val value : String = tag.getString(1).toLowerCase(Locale.ROOT)
-                if (phone=="" &&(key == "phone" || key.endsWith(":phone"))) {
+                if (phone == "" &&(key == "phone" || key.endsWith(":phone"))) {
                     phone = value
                 } else if (website == "" && (key == "website" || key.endsWith(":website"))) {
                     website = value
@@ -67,20 +67,10 @@ class Address(val name: String, databaseId: Long, database: SQLiteDatabase, val 
                     county = value
                 } else if (key.startsWith("addr:street") || key == "street:addr") {
                     street = value
-                } else if (key == "gnis:country_name") {
+                } else if (key == "gnis:country_name" || key.endsWith("country")) {
                     country = value
-                } else if ("addr:country" == key) {
-                    country = value
-                } else if ("is_in:country" == key) {
-                    country = value
-                } else  if ("operator" == key) {
+                } else if ("operator" == key || (neighbourhood == "" && key.endsWith("neighbourhood"))) {
                     neighbourhood = value
-                } else if ("neighbourhood" == key) {
-                    if (neighbourhood != "")
-                        neighbourhood = value
-                } else if ("addr:neighbourhood" == key) {
-                    if (neighbourhood != "")
-                        neighbourhood = value
                 }
             }
             tag.close()
@@ -177,8 +167,6 @@ class Address(val name: String, databaseId: Long, database: SQLiteDatabase, val 
     }
 
     constructor(result: SearchResult) : this(result.name, result.databaseId, result.database, result.lat, result.lon)
-
-    val CN: HashMap<String, String> = hashMapOf()
 
     class result (val name: String, val lat: Double, val lon: Double)
 }
