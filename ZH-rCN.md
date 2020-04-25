@@ -51,11 +51,11 @@ dependencies {
 val reader : OsmReader = OsmosisReader() 
 ```
 
-设置导入关系和道路数据，如无需导入，请不要编写以下代码。参见 [存储空间](#存储空间)
+设置导入关系和路径数据，如果您不需要，请不要编写以下代码。参见 [存储空间](#存储空间)
 
 ```kotlin
 reader.options.add(ImportOption.INCLUDE_RELATIONS)	//导入关系数据
-reader.options.add(ImportOption.INCLUDE_WAYS)		//导入道路数据
+reader.options.add(ImportOption.INCLUDE_WAYS)		//导入路径数据
 ```
 
 设置提交频率，否则将使用默认设置（5,000）。参见 [commitFrequency(提交频率)](#commitFrequency(提交频率))
