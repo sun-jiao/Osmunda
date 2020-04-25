@@ -153,7 +153,7 @@ val list4: List<SearchResult> = ReverseGeocoder(hubeiDatabase).search(iGeoPoint,
 
 为了避免进行逐条数据插入时频繁开关Transaction造成的高耗时，我在OsmosisReader类中设置了commitFrequency变量，当待插入的记录达到commitFrequency规定的数量时，将会开启一个Transaction进行批量插入操作。
 
-在批量插入之前，所有当前已读取的待插入记录都被存储在内存中，如果commitFrequency过高，将会导致过高的内存占用；而如果commitFrequency过低，则会频繁开关Transaction，导致过高的耗时。
+在批量插入之前，所有当前已读取的待插入记录都在内存中，如果commitFrequency过高，将会导致过高的内存占用；而如果commitFrequency过低，则会频繁开关Transaction，导致过高的耗时。
 
 commitFrequency的默认值为 5,000，您可以自行修改，还可以在您的应用中根据操作环境设置不同的值。
 
