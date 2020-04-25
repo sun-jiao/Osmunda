@@ -22,18 +22,19 @@ class Geocoder(val database: SQLiteDatabase) {
         val resultList: MutableList<SearchResult> = ArrayList<SearchResult>()
 
         try {
-            val cursor: Cursor = database.rawQuery("SELECT * FROM tag inner join nodes, way_no on tag.id=nodes.id or tag.id=way_no.way_id where k like \"name%\" and v like ? and lat > ? and lat < ? and lon >? and lon < ? limit ? offset ?",
+            val cursor: Cursor = database.rawQuery("SELECT * FROM tag left join way_no on tag.id = way_no.way_id left join nodes on tag.id=nodes.id or nodes.id=way_no.node_id where k like \"name%\" and v like ? and lat > ? and lat < ? and lon >? and lon < ? limit ? offset ?",
                     arrayOf("%$searchQueryOptional%", minLat.toString(), maxLat.toString(), minLon.toString(), maxLon.toString(), limit.toString(), offset.toString()))
 
             while (cursor.moveToNext()) {
                 val type = cursor.getInt(cursor.getColumnIndex("reftype"))
                 val rowType: OsmType = OsmType.values()[type]
+                var databaseId : Long = cursor.getLong(cursor.getColumnIndex("way_id"))
+                if (databaseId == 0L)
+                    databaseId = cursor.getLong(cursor.getColumnIndex("id"))
                 resultList.add(SearchResult(cursor.getDouble(cursor.getColumnIndex("lat")),
                     cursor.getDouble(cursor.getColumnIndex("lon")),
                     cursor.getString(cursor.getColumnIndex("v")),
-                    rowType,
-                    database,
-                    cursor.getLong(cursor.getColumnIndex("id"))))
+                    rowType, database, databaseId))
             }
             cursor.close()
         } catch (ex: Exception) {

@@ -5,8 +5,6 @@ import android.content.ContentResolver
 import android.content.Context
 import android.content.Intent
 import android.database.sqlite.SQLiteDatabase
-import android.location.Location
-import android.location.LocationManager.GPS_PROVIDER
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
@@ -22,16 +20,12 @@ import android.widget.ProgressBar
 import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.fragment_home.*
 import moe.sunjiao.osmunda.Osmunda
-import moe.sunjiao.osmunda.geocoder.Geocoder
 import moe.sunjiao.osmunda.geocoder.ReverseGeocoder
 import moe.sunjiao.osmunda.model.ImportOption
 import moe.sunjiao.osmunda.model.SearchResult
 import moe.sunjiao.osmunda.reader.OsmReader
 import moe.sunjiao.osmunda.reader.OsmosisReader
 import moe.sunjiao.osmundademo.R
-import org.osmdroid.api.IGeoPoint
-import org.osmdroid.util.GeoPoint
-import org.osmdroid.views.MapView
 import java.io.File
 import java.util.*
 
@@ -52,13 +46,13 @@ class HomeFragment : Fragment() {
             val hubeiDatabase: SQLiteDatabase = Osmunda(requireContext()).getDatabaseByName("hubei")
             Log.i(TAG, "start search")
 
-            val list: List<SearchResult> =  ReverseGeocoder(hubeiDatabase).search(30.51910, 114.35775, 100, 0)
-
-            //Geocoder(hubeiDatabase).search("华中师范大学", 100, 0, 30.7324, 114.6589, 30.3183, 114.0588)
+            val list: List<SearchResult> =
+                ReverseGeocoder(hubeiDatabase).search(30.4564079, 114.3850110, 10, 0)
+                //Geocoder(hubeiDatabase).search("华中师范大学", 100, 0, 30.7324, 114.6589, 30.3183, 114.0588)
             Log.i(TAG, "complete")
             for (result in list) {
-                //val address = result.toAddress()
-                Log.i(TAG, result.name + "  " + result.databaseId + "  ")
+                val address = result.toAddress()
+                Log.i(TAG, result.name + "  " + result.databaseId + "  " + address.fullAddress)
             }
         })
         val file = File(requireContext().filesDir.absolutePath+ "/rhode-island-latest.osm.bz2")
