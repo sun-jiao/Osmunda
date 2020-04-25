@@ -52,10 +52,13 @@ class HomeFragment : Fragment() {
             val hubeiDatabase: SQLiteDatabase = Osmunda(requireContext()).getDatabaseByName("hubei")
             Log.i(TAG, "start search")
 
-            val list: List<SearchResult> =  ReverseGeocoder(hubeiDatabase).search(30.51910, 114.35775, 2000, 0)
+            val list: List<SearchResult> =  ReverseGeocoder(hubeiDatabase).search(30.51910, 114.35775, 100, 0)
 
             //Geocoder(hubeiDatabase).search("华中师范大学", 100, 0, 30.7324, 114.6589, 30.3183, 114.0588)
             Log.i(TAG, "complete")
+            for (result in list) {
+                //val address = result.toAddress()
+                Log.i(TAG, result.name + "  " + result.databaseId + "  ")
             }
         })
         val file = File(requireContext().filesDir.absolutePath+ "/rhode-island-latest.osm.bz2")
