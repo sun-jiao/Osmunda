@@ -8,7 +8,7 @@
 
 *Osmunda* is an Android library that reads open street map data (osm.pbf, osm.bz2 and osm.gz formats, the latter two are essentially xml), is written to SQLite, and can be used for offline geocoding, etc.
 
-Osmunda is the scientific name of [a genus of plant](https://en.wikipedia.org/wiki/Osmunda), it's a kind of fern, which was chosen because it starts with OSM.
+*Osmunda* is the scientific name of [a genus of plant](https://en.wikipedia.org/wiki/Osmunda), it's a kind of fern, which was chosen because it starts with OSM.
 
 ## Development progress
 
