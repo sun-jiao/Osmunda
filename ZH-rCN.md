@@ -143,7 +143,7 @@ val list4: List<SearchResult> = ReverseGeocoder(hubeiDatabase).search(iGeoPoint,
 
 解压出的数据库文件198.67 MiB (208,318,464 字节)，约为osm.bz2的9.05倍。
 
-不同区域的文件大小并非「区域越大，数据越多」，还受到当地人口数量、人类聚居地密集程度、经济发展程度影响，还与开放街道地图服务的可用性有关。例如，人口密集、经济发达的广东省拥有73M的数据，而地广人稀的新疆和西藏仅分别有17M和18M的数据（均为pbf格式），请根据数据的实际大小合理安排您的应用中的数据，如果没有可用的数据，您可以从[overpass-api]https://overpass-api.de/api/map?bbox=114.3495,30.5132,114.3671,30.5258。
+不同区域的文件大小并非「区域越大，数据越多」，还受到当地人口数量、人类聚居地密集程度、经济发展程度影响，还与开放街道地图服务的可用性有关。例如，人口密集、经济发达的广东省拥有73M的数据，而地广人稀的新疆和西藏仅分别有17M和18M的数据（均为pbf格式），请根据数据的实际大小合理安排您的应用中的数据，如果没有可用的数据，您可以从overpass-api自行下载。
 
 您还可以根据自己应用的需求，选择是否导入 relation 数据和 way 数据，具体代码见[导入数据](#导入数据)
 
@@ -185,7 +185,7 @@ commitFrequency的默认值为 5,000，您可以自行修改，还可以在您�
 
 对于中国用户，我推荐[开放街道地图法国社区网站](http://download.openstreetmap.fr/extracts/asia/china/)，其中有中国的分省数据，大大方便了下载和使用。
 
-您还可以自行导出特定地区的xml文件。
+您还可以自行导出特定地区的xml文件：https://overpass-api.de/api/map?bbox=min_longitude,min_latitude,max_longitude,max_latitude。
 
 只要条件允许，请尽可能选择pbf格式，因为其占用空间和导入耗时均有显著优势。
 
