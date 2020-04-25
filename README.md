@@ -132,6 +132,29 @@ val iGeoPoint : IGeoPoint = mapView.mapCenter
 val list4: List<SearchResult> = ReverseGeocoder(hubeiDatabase).search(iGeoPoint, 100, 0)
 ```
 
+## Get full address
+
+You can use `result.toAddress()` to get an address, and then get the complete address from the returned `Address` class, you can also get the country, region, city, road, house number and other information.
+
+```kotlin
+for (result in list) {
+	val address : Address = result.toAddress()
+	val fullAddress : String = address.fullAddress   // full address
+	val country : String = address.country  // country
+	val state : String = address.state  // province or state
+	val city : String = address.city  // city
+	val county : String = address.county  // district, county
+	val town : String = address.town  // little town
+	val street : String = address.street  // road, street
+	val housenumber : String = address.housenumber  // house number
+	val neighbourhood : String = address.neighbourhood  // community, school, institution, village, etc.
+	val housename : String = address.housename  // 
+	val postcode : String = address.postcode  // postcode
+	val phone : String = address.phone  // phone number
+	val website : String = address.website  // website
+}
+```
+
 # Performance
 
 Test devices: Google Pixel 3, Android Q (10.0)
