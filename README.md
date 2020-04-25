@@ -17,7 +17,7 @@ pre-release
 ### To-do
 
 - More data import options. 
-- Optimizing database structure to avoid the problem that Nodes, Ways and Relations must be queried separately.
+- Optimizing database structure to avoid the time-consuming query caused by multiple joins.
 - Try to use NOSQL database, because OSM data uses a lot of key-value pairs, so NOSQL database may be a better choice.
 - Statement support in more languages.
 
@@ -174,7 +174,7 @@ In terms of total time consumption, when commitFrequency is set to 1,000 ~ 500,0
 
 ### Geocoding
 
-The query operation of reverse geocoding takes 3-4 seconds, and the operation of obtaining the complete address according to the query result takes 0.3-3 seconds. If you query multiple geographic information records at one time, please do not get all the complete addresses at once, but do it when the user accesses a certain record.
+The query operation of reverse geocoding takes 3-5 seconds, and the operation of obtaining the complete address according to the query result takes 0.3-3 seconds. If you query multiple geographic information records at one time, please do not get all the complete addresses at once, but do it when the user accesses a certain record.
 
 ## CPU
 
