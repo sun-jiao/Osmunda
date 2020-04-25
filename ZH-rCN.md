@@ -125,6 +125,29 @@ val iGeoPoint : IGeoPoint = mapView.mapCenter
 val list4: List<SearchResult> = ReverseGeocoder(hubeiDatabase).search(iGeoPoint, 100, 0)
 ```
 
+## 获取完整地址
+
+可以使用`result.toAddress()`获取地址，然后从返回的`Address`类中获取完整地址，也可获取国家、地区、城市、道路、门牌号等信息。
+
+```kotlin
+for (result in list) {
+	val address : Address = result.toAddress()
+	val fullAddress : String = address.fullAddress   // 完整地址
+	val country : String = address.country  // 国家
+	val state : String = address.state  // 省或州
+	val city : String = address.city  // 城市
+	val county : String = address.county  // 区、县
+	val town : String = address.town  // 乡、镇、街道
+	val street : String = address.street  // 通讯地址所在道路
+	val housenumber : String = address.housenumber  // 门牌号
+	val neighbourhood : String = address.neighbourhood  // 小区、社区、学校、机关单位、村庄等
+	val housename : String = address.housename  // 
+	val postcode : String = address.postcode  // 邮政编码
+	val phone : String = address.phone  // 电话号码
+	val website : String = address.website  // 网址
+}
+```
+
 # 性能
 
 测试机器：Google Pixel 3，Android Q (10.0)
