@@ -130,7 +130,7 @@ class Address(val name: String, databaseId: Long, database: SQLiteDatabase, val 
                 list.sortBy { (it.lat - latitude) * (it.lat - latitude) + (it.lon - longitude) * (it.lon - longitude) }
                 county = list[0].name
             }
-            if (town == ""){
+            /*if (town == ""){
                 val where_town_way = sqliteStatement.town_way
                 val list = arrayListOf<result>()
                 val cursor: Cursor = database.rawQuery("SELECT * FROM tag inner join nodes, way_no on tag.id=way_no.way_id and way_no.node_id=nodes.id where $where_town_way group by tag.id order by (lat - ?) * (lat - ?) + (lon - ?) * (lon - ?)  asc limit 1 ",
@@ -159,7 +159,7 @@ class Address(val name: String, databaseId: Long, database: SQLiteDatabase, val 
                 cursor2.close()
                 list.sortBy { (it.lat - latitude) * (it.lat - latitude) + (it.lon - longitude) * (it.lon - longitude) }
                 town = list[0].name
-            }
+            }*/
             if (neighbourhood == ""){
                 val where_neighbourhood_way = sqliteStatement.neighbourhood_way
                 val list = arrayListOf<result>()
@@ -202,8 +202,9 @@ class Address(val name: String, databaseId: Long, database: SQLiteDatabase, val 
                 postcode = " ($postcode)"
             if (street != "")
                 street = "$street, "
-            fullAddress = "$name$housename, $neighbourhood, $housenumber$street$town, $county, $city, $state, $country$postcode"
-            Log.i(TAG, "$name  $databaseId  $fullAddress")
+            if (town != "")
+                town = "$town, "
+            fullAddress = "$name$housename, $neighbourhood, $housenumber$street$town$county, $city, $state, $country$postcode"
         }
     }
 
