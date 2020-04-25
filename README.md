@@ -17,7 +17,7 @@ pre-release
 ### To-do
 
 - More data import options. 
-- Optimizing database structure to avoid the problem that Nodes, Way and Relation must be queried separately.
+- Optimizing database structure to avoid the problem that Nodes, Ways and Relations must be queried separately.
 - Try to use NOSQL database, because OSM data uses a lot of key-value pairs, so NOSQL database may be a better choice.
 - Statement support in more languages.
 
@@ -156,11 +156,11 @@ You can also choose whether to import relation data and way data according to th
 
 ## commitFrequency (commit frequency)
 
-Since the read operation occurs in the Osmosis library instead of this library, the OsmosisReader class in this library is only called once after each time the Osmosis library reads an element. The process () function cannot be included in the same Transaction in.
+Since the read operation occurs in the Osmosis instead of *Osmunda*, the OsmosisReader class in *Osmunda* is only called after the Osmosis reads an element. The `process()` function cannot be included in the same transaction.
 
-In order to avoid the high time consumption caused by frequent switching of transactions when inserting data one by one, I set the commitFrequency variable in the OsmosisReader class. When the number of records to be inserted reaches the number specified by commitFrequency, a Transaction will be opened for batch insertion operations.
+In order to avoid the high time consumption caused by frequent begining and ending of transactions when inserting data one by one, the commitFrequency variable was set in the OsmosisReader class. When the records to be inserted reaches the number specified by commitFrequency, a Transaction will be opened for batch insert operations.
 
-Before batch insertion, all currently read pending records are stored in memory. If the commitFrequency is too high, it will cause too high memory usage; if the commitFrequency is too low, the Transaction will be frequently switched, resulting in too high Time-consuming.
+Before batch inserting, all currently read pending records are stored in memory. If the commitFrequency is too high, it will cause too high memory usage; if the commitFrequency is too low, the Transaction will be frequently switched, it will cause too high time-consuming.
 
 The default value of commitFrequency is 5,000, you can modify it in your code according to the environment of your application.
 
@@ -188,7 +188,7 @@ The memory consumption of data read and database write operations is about 200M-
 
 [Planet OSM](https://planet.openstreetmap.org/) is the original source of all data, operated by the Open Street Map, but its download speed is limited.
 
-It can be downloaded from other mirror data websites: [Site List] (https://wiki.openstreetmap.org/wiki/Planet.osm)
+It can be downloaded from other mirror data websites: [Site List](https://wiki.openstreetmap.org/wiki/Planet.osm)
 
 You can also export the xml file of specific area by yourself:  https://overpass-api.de/api/map?bbox=min_longitude,min_latitude,max_longitude,max_latitude .
 
@@ -202,8 +202,8 @@ http://www.apache.org/licenses/
 
 # References & Credits
 
-Thanks to [spyhunter99 / osmreader] (https://github.com/spyhunter99/osmreader), I referred to the project, rewrote its core algorithms in kotlin, fixed the Osmosis not work problem, and added reverse geocoding feature. 
+Thanks to [spyhunter99 / osmreader](https://github.com/spyhunter99/osmreader), I referred to the project, rewrote its core algorithms in kotlin, fixed the Osmosis not work problem, and added reverse geocoding feature. 
 
 # My OSM Account
 
-[sun-jiao] (https://www.openstreetmap.org/user/sun-jiao), mainly active in Wuhan.
+[sun-jiao](https://www.openstreetmap.org/user/sun-jiao), mainly active in Wuhan.
