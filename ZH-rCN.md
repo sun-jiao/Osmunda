@@ -25,22 +25,22 @@ pre-release
 #### 第一步
 
 将JitPack仓库添加进您的项目的build.gradle文件中：
-
-	allprojects {
-		repositories {
-			...
-			maven { url 'https://jitpack.io' }
-		}
+```
+allprojects {
+	repositories {
+		...
+		maven { url 'https://jitpack.io' }
 	}
-
+}
+```
 #### 第二步
 
 添加依赖
-
-	dependencies {
-	        implementation 'moe.sunjiao:osmunda:1.0.0'
-	}
-
+```
+dependencies {
+        implementation 'moe.sunjiao:osmunda:1.1.0'
+}
+```
 ## 导入数据
 
 关于数据的获取，参见 [开放街道地图数据网站](#开放街道地图数据网站)
