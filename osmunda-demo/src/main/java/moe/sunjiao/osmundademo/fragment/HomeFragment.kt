@@ -50,19 +50,18 @@ class HomeFragment : Fragment() {
         reader.options.add(ImportOption.INCLUDE_WAYS)
         val thread = Thread(Runnable {
             val hubeiDatabase: SQLiteDatabase = Osmunda(requireContext()).getDatabaseByName("hubei")
-            val list: List<SearchResult> =
-                //Geocoder(hubeiDatabase).search("华中师范大学", 100, 0, 30.7324, 114.6589, 30.3183, 114.0588)
-                ReverseGeocoder(hubeiDatabase).search(30.51910, 114.35775, 100, 0)
+            Log.i(TAG, "start search")
 
-            for (result in list) {
-                val address = result.toAddress
-                Log.i(TAG, result.name + "  " + result.databaseId + "  " + address.fullAddress)
+            val list: List<SearchResult> =  ReverseGeocoder(hubeiDatabase).search(30.51910, 114.35775, 2000, 0)
+
+            //Geocoder(hubeiDatabase).search("华中师范大学", 100, 0, 30.7324, 114.6589, 30.3183, 114.0588)
+            Log.i(TAG, "complete")
             }
         })
         val file = File(requireContext().filesDir.absolutePath+ "/rhode-island-latest.osm.bz2")
 
-        val readThread = Thread(Runnable { reader.readData(file, requireContext(), "rhodeitest4") })
-        readThread.start()
+        //val readThread = Thread(Runnable { reader.readData(file, requireContext(), "rhodeitest4") })
+        //readThread.start()
 
         val listener : OnClickListener = OnClickListener {
             /*val intent = Intent()
