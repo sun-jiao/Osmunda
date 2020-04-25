@@ -160,7 +160,7 @@ Since the read operation occurs in the Osmosis instead of *Osmunda*, the Osmosis
 
 In order to avoid the high time consumption caused by frequent begining and ending of transactions when inserting data one by one, the commitFrequency variable was set in the OsmosisReader class. When the records to be inserted reaches the number specified by commitFrequency, a Transaction will be opened for batch insert operations.
 
-Before batch inserting, all currently read pending records are stored in memory. If the commitFrequency is too high, it will cause too high memory usage; if the commitFrequency is too low, the Transaction will be frequently switched, it will cause too high time-consuming.
+Before inserting, all currently read pending records are in memory. If the commitFrequency is too high, too much memory will be occupied; and if the commitFrequency is too low, the transaction begining and ending will be carried out frequently, very long time will be consumed.
 
 The default value of commitFrequency is 5,000, you can modify it in your code according to the environment of your application.
 
