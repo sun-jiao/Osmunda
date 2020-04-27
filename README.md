@@ -43,18 +43,18 @@ allprojects {
 Add the dependency
 ```
 dependencies {
-        implementation 'moe.sunjiao:osmunda:1.1.0'
+        implementation 'moe.sunjiao:osmunda:<VERSION>'
 }
 ```
 
-## Data import
+## Import
 
-For data Source, see [OSM data website](#OSM data website)
+For data Source, see [OSM data website](#OSM_data_website)
 
 Instantiate an OsmosisReader.
 
 ```kotlin
-val reader: OsmReader = OsmosisReader ()
+val reader: Reader = OsmosisReader()
 ```
 
 Set import relations and ways data, if you don't need them, please do not write the following code. See [Storage](#Storage)
@@ -64,10 +64,10 @@ reader.options.add (ImportOption.INCLUDE_RELATIONS) // Import relationa data
 reader.options.add (ImportOption.INCLUDE_WAYS) // Import ways data
 ```
 
-Set the commit frequency, otherwise the default setting (5,000) will be used. See [commitFrequency] (#commitFrequency)
+Set the commit frequency, otherwise the default setting (5,000) will be used. See [commitFrequency](#commitFrequency)
 
 ```
-(reader as OsmosisReader).commitFrequency = 100000
+(reader as OsmosisReader).commitFrequency = 5000
 ```
 
 Set the OSM data file, context and database file name, and start reading.
@@ -79,7 +79,7 @@ reader.readData (File (requireContext (). filesDir.absolutePath + "/hubei-latest
 
 ## Get import status
 
-Use `reader.read` to get the number of OSM records read, and `reader.insert` to get the number of OSM records inserted into the database. (For the reason of difference between them, please refer to [Performance / Improve Performance] (#Improve Performance))
+Use `reader.read` to get the number of OSM records read, and `reader.insert` to get the number of OSM records inserted into the database. (For the reason of difference between them, please refer to [commitFrequency](#commitFrequency) )
 
 Use `reader.progress` to get the current estimated progress as a percentage.
 
@@ -175,9 +175,9 @@ The decompressed database file is 198.67 MiB (208,318,464 bytes), approximately 
 
 The data file in a large areas is not necessarily larger than ones in small areas, it is also infected by the local population, density of human settlements, and economic development. It is also related to the availability of Open Street Map services. For example, Guangdong is a populated and developed province and it has 73M of data, while the sparsely populated Xinjiang and Tibet only have 17M and 18M of data (all in pbf format). Please arrange your application according to the actual size of the data. If there is no available data, you can go to overpass-api https://overpass-api.de/api/map?bbox=min_longitude,min_latitude,max_longitude,max_latitude.
 
-You can also choose whether to import relation data and way data according to the needs of your application. For the specific code, see [Data import](#Data import)
+You can also choose whether to import relation data and way data according to the needs of your application. For the specific code, see [Import](#Import)
 
-## commitFrequency (commit frequency)
+## commitFrequency
 
 Since the read operation occurs in the Osmosis instead of *Osmunda*, the OsmosisReader class in *Osmunda* is only called after the Osmosis reads an element. The `process()` function cannot be included in the same transaction.
 
@@ -207,7 +207,7 @@ The CPU usage of data read and database write operations is about 10% -30%.
 
 The memory consumption of data read and database write operations is about 200M-1G.
 
-# OSM data website
+# OSM_data_website
 
 [Planet OSM](https://planet.openstreetmap.org/) is the original source of all data, operated by the Open Street Map, but its download speed is limited.
 

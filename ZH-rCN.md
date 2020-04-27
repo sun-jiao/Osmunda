@@ -48,7 +48,7 @@ dependencies {
 实例化一个OsmosisReader。
 
 ```kotlin
-val reader : OsmReader = OsmosisReader() 
+val reader : Reader = OsmosisReader() 
 ```
 
 设置导入关系和路径数据，如果您不需要，请不要编写以下代码。参见 [存储空间](#存储空间)
