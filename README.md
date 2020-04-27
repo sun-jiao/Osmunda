@@ -43,7 +43,7 @@ allprojects {
 Add the dependency
 ```
 dependencies {
-        implementation 'moe.sunjiao:osmunda:1.1.0'
+        implementation 'moe.sunjiao:osmunda:<VERSION>'
 }
 ```
 
