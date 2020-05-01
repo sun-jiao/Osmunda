@@ -64,7 +64,7 @@ reader.options.add (ImportOption.INCLUDE_RELATIONS) // Import relationa data
 reader.options.add (ImportOption.INCLUDE_WAYS) // Import ways data
 ```
 
-Set the commit frequency, otherwise the default setting (5,000) will be used. See [commitFrequency] (#commitFrequency)
+Set the commit frequency, otherwise the default setting (5,000) will be used. See [commitFrequency](#commitFrequency)
 
 ```
 (reader as OsmosisReader).commitFrequency = 100000
@@ -79,7 +79,7 @@ reader.readData (File (requireContext (). filesDir.absolutePath + "/hubei-latest
 
 ## Get import status
 
-Use `reader.read` to get the number of OSM records read, and `reader.insert` to get the number of OSM records inserted into the database. (For the reason of difference between them, please refer to [Performance / Improve Performance] (#Improve Performance))
+Use `reader.read` to get the number of OSM records read, and `reader.insert` to get the number of OSM records inserted into the database. (For the reason of difference between them, please refer to [Performance / Improve Performance](#Improve Performance))
 
 Use `reader.progress` to get the current estimated progress as a percentage.
 
