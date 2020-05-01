@@ -1,51 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragment.HomeFragment">
-    <ListView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/sql_list"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"/>
+    tools:context=".fragment.HomeFragment"
+    android:orientation="vertical">
     <LinearLayout
-        android:id="@+id/import_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/sql_list"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp">
+        android:orientation="horizontal"
+        android:layout_margin="16dp">
+        <EditText
+            android:id="@+id/place_name"
+            android:layout_width="0dp"
+            android:layout_weight="3"
+            android:layout_height="wrap_content"
+            android:hint="@string/database_name"
+            android:inputType="textNoSuggestions"
+            android:textColor="@color/colorAccent"
+            android:importantForAutofill="no"
+            />
+
+        <Button
+            android:id="@+id/import_button"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:tint="@android:color/black"
+            android:text="@string/importing" />
+
+    </LinearLayout>
+
+
         <TextView
             android:id="@+id/import_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="" />
+            android:text="@string/default_progress"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginVertical="4dp"/>
         <ProgressBar
             style="?android:attr/progressBarStyleHorizontal"
             android:id="@+id/import_progress"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-    </LinearLayout>
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginVertical="4dp"/>
 
-    <ImageButton
-        android:id="@+id/import_button"
-        android:layout_width="96dp"
-        android:layout_height="96dp"
-        android:scaleType="fitXY"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:src="@drawable/ic_file"
-        android:tint="@android:color/black"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/import_view"/>
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/sql_list"
+        android:layout_margin="16dp"/>
+</LinearLayout>

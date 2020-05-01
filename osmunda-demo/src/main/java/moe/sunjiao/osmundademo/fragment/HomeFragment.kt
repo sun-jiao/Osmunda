@@ -23,8 +23,8 @@ import moe.sunjiao.osmunda.Osmunda
 import moe.sunjiao.osmunda.geocoder.ReverseGeocoder
 import moe.sunjiao.osmunda.model.ImportOption
 import moe.sunjiao.osmunda.model.SearchResult
-import moe.sunjiao.osmunda.reader.Reader
 import moe.sunjiao.osmunda.reader.OsmosisReader
+import moe.sunjiao.osmunda.reader.Reader
 import moe.sunjiao.osmundademo.R
 import java.io.File
 import java.util.*
@@ -42,6 +42,7 @@ class HomeFragment : Fragment() {
         val thisView: View = inflater.inflate(R.layout.fragment_home,container,false)
         reader.options.add(ImportOption.INCLUDE_RELATIONS)
         reader.options.add(ImportOption.INCLUDE_WAYS)
+
         val thread = Thread(Runnable {
             val hubeiDatabase: SQLiteDatabase = Osmunda(requireContext()).getDatabaseByName("hubei")
             Log.i(TAG, "start search")

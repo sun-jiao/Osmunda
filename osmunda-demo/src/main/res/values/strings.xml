@@ -6,4 +6,11 @@
     <string name="title_forward">Forward Geocoding</string>
     <string name="title_reverse">Reverse Geocoding</string>
     <string name="title_home">Home</string>
+    <string name="latitude">Latitude</string>
+    <string name="longitude">Longitude</string>
+    <string name="geocode">Geocode</string>
+    <string name="place_name">Place Name</string>
+    <string name="importing">Import</string>
+    <string name="default_progress">No data importing now.</string>
+    <string name="database_name">Database Name</string>
 </resources>
