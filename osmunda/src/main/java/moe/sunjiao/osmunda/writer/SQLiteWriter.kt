@@ -1,4 +1,4 @@
-package moe.sunjiao.osmunda.reader
+package moe.sunjiao.osmunda.writer
 
 import android.content.ContentValues
 import android.content.Context
@@ -9,7 +9,8 @@ import moe.sunjiao.osmunda.Osmunda
 import moe.sunjiao.osmunda.model.OsmType
 import org.openstreetmap.osmosis.core.domain.v0_6.*
 
-class SQLiteWriter (context : Context, databaseName: String, private val commitFrequency : Int = 500000){
+class SQLiteWriter (context : Context, databaseName: String, private val commitFrequency : Int = 5000):
+    OsmWriter {
     var read: Long = 0
     var insert : Long = 0
     private var commitCount = 1
@@ -33,12 +34,12 @@ class SQLiteWriter (context : Context, databaseName: String, private val commitF
         database.execSQL("CREATE TABLE IF NOT EXISTS \"ways\" (\"id\" INTEGER PRIMARY KEY  NOT NULL , \"changeset\" INTEGER, \"version\" INTEGER, \"user\" TEXT, \"uid\" INTEGER, \"timestamp\" BIGINT)")
     }
 
-    fun checkCommit(){
+    override fun checkCommit(){
         if (read > (commitCount*commitFrequency).toLong())
             commit()
     }
 
-    fun commit() {
+    override fun commit() {
         commitCount ++
         Log.i(TAG , "Pause read $read Start Transaction $insert")
         val list = arrayListOf<ArrayList<ContentValues>>(
@@ -74,6 +75,7 @@ class SQLiteWriter (context : Context, databaseName: String, private val commitF
         database.endTransaction()
         Log.i(TAG , "Stop Transaction $insert continue read $read" )
     }
+
     private fun translate(type: EntityType): Int {
         return when (type) {
             EntityType.Bound -> OsmType.BOUND.ordinal
@@ -83,7 +85,7 @@ class SQLiteWriter (context : Context, databaseName: String, private val commitF
         }
     }
 
-    fun insertNode(id : Long, changeset: Long ,version: Int, user:String, uid: Int,  timestamp : Long, lat : Double, lon: Double ){
+    override fun insertNode(id : Long, changeset: Long ,version: Int, user:String, uid: Int,  timestamp : Long, lat : Double, lon: Double ){
         try {
             val values = ContentValues()
             values.put("id", id)
@@ -102,11 +104,11 @@ class SQLiteWriter (context : Context, databaseName: String, private val commitF
         }
     }
 
-    fun insertNode(node : Node){
+    override fun insertNode(node : Node){
         insertNode(node.id, node.changesetId,node.version, node.user.name,node.user.id,node.timestamp.time,node.latitude,node.longitude)
     }
 
-    fun insertTag(id: Long, k: String, v:String, reftype : Int){
+    override fun insertTag(id: Long, k: String, v:String, reftype : Int){
         try {
             val values = ContentValues()
             values.put("id", id)
@@ -121,11 +123,11 @@ class SQLiteWriter (context : Context, databaseName: String, private val commitF
         }
     }
 
-    fun insertTag(entity : Entity, tag: Tag){
+    override fun insertTag(entity : Entity, tag: Tag){
         insertTag(entity.id,tag.key,tag.value,translate(entity.type))
     }
 
-    fun insertWay(id : Long, changeset: Long ,version: Int, user:String, uid: Int,  timestamp : Long){
+    override fun insertWay(id : Long, changeset: Long ,version: Int, user:String, uid: Int,  timestamp : Long){
         try {
             val values = ContentValues()
             values.put("id", id)
@@ -142,11 +144,11 @@ class SQLiteWriter (context : Context, databaseName: String, private val commitF
         }
     }
 
-    fun insertWay(way: Way){
+    override fun insertWay(way: Way){
         insertWay(way.id, way.changesetId, way.version, way.user.name, way.user.id, way.timestamp.time)
     }
 
-    fun insertWayNode(way_id: Long,node_id:Long, insert_id:Long){
+    override fun insertWayNode(way_id: Long,node_id:Long, insert_id:Long){
         try {
             val values = ContentValues()
             values.put("way_id", way_id)
@@ -160,11 +162,11 @@ class SQLiteWriter (context : Context, databaseName: String, private val commitF
         }
     }
 
-    fun insertWayNode(way: Way, node:WayNode){
+    override fun insertWayNode(way: Way, node:WayNode){
         insertWayNode(way.id, node.nodeId, read)
     }
 
-    fun insertRelation(id : Long, changeset: Long ,version: Int, user:String, uid: Int,  timestamp : Long){
+    override fun insertRelation(id : Long, changeset: Long ,version: Int, user:String, uid: Int,  timestamp : Long){
         try {
             val values = ContentValues()
             values.put("id", id)
@@ -181,11 +183,11 @@ class SQLiteWriter (context : Context, databaseName: String, private val commitF
         }
     }
 
-    fun insertRelation(relation:Relation ){
+    override fun insertRelation(relation:Relation ){
         insertRelation(relation.id, relation.changesetId, relation.version, relation.user.name, relation.user.id, relation.timestamp.time)
     }
 
-    fun insertMember(relation_id: Long, type:String, member_id:Long, role:String, insert_id:Long){
+    override fun insertMember(relation_id: Long, type:String, member_id:Long, role:String, insert_id:Long){
         try {
             val insertRelationMember1 = ContentValues()
             insertRelationMember1.put("relation_id", relation_id)
@@ -201,7 +203,7 @@ class SQLiteWriter (context : Context, databaseName: String, private val commitF
         }
     }
 
-    fun insertMember(relation: Relation, member: RelationMember){
+    override fun insertMember(relation: Relation, member: RelationMember){
         insertMember(relation.id, member.memberType.name, member.memberId, member.memberRole, read)
     }
 }
