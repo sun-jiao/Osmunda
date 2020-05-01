@@ -9,7 +9,7 @@ import moe.sunjiao.osmunda.Osmunda
 import moe.sunjiao.osmunda.model.OsmType
 import org.openstreetmap.osmosis.core.domain.v0_6.*
 
-class SQLiteWriter (context : Context, databaseName: String, private val commitFrequency : Int = 5000): OsmWriter {
+class SimpleSQLWriter (context : Context, databaseName: String, private val commitFrequency : Int = 5000): OsmWriter {
     var read: Long = 0
     var insert : Long = 0
     private var commitCount = 1
@@ -25,12 +25,10 @@ class SQLiteWriter (context : Context, databaseName: String, private val commitF
 
     init{
         database = Osmunda(context).getDatabaseByName(databaseName)
-        database.execSQL("CREATE TABLE IF NOT EXISTS \"nodes\" (\"id\" INTEGER PRIMARY KEY  NOT NULL , \"lat\" DOUBLE NOT NULL , \"lon\" DOUBLE NOT NULL , \"version\" INTEGER, \"timestamp\" DATETIME, \"uid\" INTEGER, \"user\" TEXT, \"changeset\" INTEGER)")
+        database.execSQL("CREATE TABLE IF NOT EXISTS \"nodes\" (\"id\" INTEGER PRIMARY KEY  NOT NULL , \"lat\" DOUBLE NOT NULL , \"lon\" DOUBLE NOT NULL)")
         database.execSQL("CREATE TABLE IF NOT EXISTS \"relation_members\" (\"type\" TEXT NOT NULL , \"member_id\" INTEGER NOT NULL , \"role\" TEXT, \"relation_id\" INTEGER NOT NULL,\"insert_id\" INTEGER NOT NULL, PRIMARY KEY( \"relation_id\",\"member_id\",\"insert_id\" ))")
-        database.execSQL("CREATE TABLE IF NOT EXISTS \"relations\" (\"id\" INTEGER PRIMARY KEY  NOT NULL , \"user\" TEXT, \"uid\" INTEGER, \"version\" INTEGER, \"changeset\" INTEGER, \"timestamp\" BIGINT)")
-        database.execSQL("CREATE TABLE IF NOT EXISTS \"tag\" (\"id\" INTEGER NOT NULL , \"k\" TEXT NOT NULL , \"v\" TEXT NOT NULL , \"reftype\" INTEGER NOT NULL  DEFAULT -1, PRIMARY KEY( \"reftype\",\"k\" ,\"id\" )   )")
+        database.execSQL("CREATE TABLE IF NOT EXISTS \"tag\" (\"id\" INTEGER NOT NULL , \"k\" TEXT NOT NULL , \"v\" TEXT NOT NULL , PRIMARY KEY( \"reftype\",\"k\" ,\"id\" )   )")
         database.execSQL("CREATE TABLE IF NOT EXISTS \"way_no\" (\"way_id\" INTEGER NOT NULL , \"node_id\" INTEGER NOT NULL, \"insert_id\" INTEGER NOT NULL,  PRIMARY KEY (\"way_id\", \"node_id\",\"insert_id\")  )  ")
-        database.execSQL("CREATE TABLE IF NOT EXISTS \"ways\" (\"id\" INTEGER PRIMARY KEY  NOT NULL , \"changeset\" INTEGER, \"version\" INTEGER, \"user\" TEXT, \"uid\" INTEGER, \"timestamp\" BIGINT)")
     }
 
     override fun checkCommit(){
@@ -75,24 +73,10 @@ class SQLiteWriter (context : Context, databaseName: String, private val commitF
         Log.i(TAG , "Stop Transaction $insert continue read $read" )
     }
 
-    private fun translate(type: EntityType): Int {
-        return when (type) {
-            EntityType.Bound -> OsmType.BOUND.ordinal
-            EntityType.Node -> OsmType.NODE.ordinal
-            EntityType.Relation -> OsmType.RELATION.ordinal
-            EntityType.Way -> OsmType.WAY.ordinal
-        }
-    }
-
-    private fun insertNode(id : Long, changeset: Long, version: Int, user:String, uid: Int, timestamp : Long, lat : Double, lon: Double ){
+    private fun insertNode(id : Long, lat : Double, lon: Double ){
         try {
             val values = ContentValues()
             values.put("id", id)
-            values.put("changeset", changeset)
-            values.put("version", version)
-            values.put("user",user)
-            values.put("uid", uid)
-            values.put("timestamp",timestamp )
             values.put("lat", lat)
             values.put("lon", lon)
             nodeValuesList.add(values)
@@ -104,16 +88,15 @@ class SQLiteWriter (context : Context, databaseName: String, private val commitF
     }
 
     override fun insertNode(node : Node){
-        insertNode(node.id, node.changesetId,node.version, node.user.name,node.user.id,node.timestamp.time,node.latitude,node.longitude)
+        insertNode(node.id, node.latitude, node.longitude)
     }
 
-    private fun insertTag(id: Long, k: String, v:String, reftype : Int){
+    private fun insertTag(id: Long, k: String, v:String){
         try {
             val values = ContentValues()
             values.put("id", id)
             values.put("k", k)
             values.put("v", v)
-            values.put("reftype", reftype)
             tagValuesList.add(values)
             read++
             batchCount++
@@ -123,29 +106,10 @@ class SQLiteWriter (context : Context, databaseName: String, private val commitF
     }
 
     override fun insertTag(entity : Entity, tag: Tag){
-        insertTag(entity.id,tag.key,tag.value,translate(entity.type))
+        insertTag(entity.id,tag.key,tag.value)
     }
 
-    private fun insertWay(id : Long, changeset: Long, version: Int, user:String, uid: Int, timestamp : Long){
-        try {
-            val values = ContentValues()
-            values.put("id", id)
-            values.put("changeset", changeset)
-            values.put("version", version)
-            values.put("user", user)
-            values.put("uid", uid)
-            values.put("timestamp",timestamp)
-            wayValuesList.add(values)
-            read++
-            batchCount++
-        } catch (ex: Exception) {
-            ex.printStackTrace()
-        }
-    }
-
-    override fun insertWay(way: Way){
-        insertWay(way.id, way.changesetId, way.version, way.user.name, way.user.id, way.timestamp.time)
-    }
+    override fun insertWay(way: Way) {}
 
     private fun insertWayNode(way_id: Long, node_id:Long, insert_id:Long){
         try {
@@ -165,26 +129,7 @@ class SQLiteWriter (context : Context, databaseName: String, private val commitF
         insertWayNode(way.id, node.nodeId, read)
     }
 
-    private fun insertRelation(id : Long, changeset: Long, version: Int, user:String, uid: Int, timestamp : Long){
-        try {
-            val values = ContentValues()
-            values.put("id", id)
-            values.put("changeset",changeset)
-            values.put("version",version)
-            values.put("user",user)
-            values.put("uid",uid)
-            values.put("timestamp",timestamp)
-            relationValuesList.add(values)
-            batchCount++
-            read++
-        } catch (ex: Exception) {
-            ex.printStackTrace()
-        }
-    }
-
-    override fun insertRelation(relation:Relation ){
-        insertRelation(relation.id, relation.changesetId, relation.version, relation.user.name, relation.user.id, relation.timestamp.time)
-    }
+    override fun insertRelation(relation:Relation ){}
 
     private fun insertMember(relation_id: Long, type:String, member_id:Long, role:String, insert_id:Long){
         try {
