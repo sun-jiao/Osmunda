@@ -1,5 +1,7 @@
 package moe.sunjiao.osmundademo
 
+import android.content.Context
+import android.database.sqlite.SQLiteDatabase
 import android.os.Bundle
 import android.view.MenuItem
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -7,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.viewpager.widget.ViewPager
 import kotlinx.android.synthetic.main.activity_main.*
+import moe.sunjiao.osmunda.Osmunda
 import moe.sunjiao.osmundademo.fragment.ForwardFragment
 import moe.sunjiao.osmundademo.fragment.HomeFragment
 import moe.sunjiao.osmundademo.fragment.ReverseFragment
@@ -76,4 +79,11 @@ class MainActivity : AppCompatActivity() {
         })
     }
 
+    fun getDatabase() : SQLiteDatabase {
+        return Osmunda(applicationContext).getDatabaseByName("hubei")
+    }
+
+    fun getContext() : Context{
+            return applicationContext
+        }
 }

@@ -33,7 +33,7 @@
 
 
     <Button
-        android:id="@+id/geocode_button"
+        android:id="@+id/reverse_geocode_button"
         style="?android:textAppearanceSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -45,6 +45,7 @@
         android:textStyle="bold"/>
 
     <ListView
+        android:id="@+id/reverse_result_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 

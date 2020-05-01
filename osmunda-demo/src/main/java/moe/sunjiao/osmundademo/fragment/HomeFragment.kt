@@ -15,6 +15,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.View.OnClickListener
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.ImageButton
 import android.widget.ProgressBar
 import androidx.fragment.app.Fragment
@@ -68,7 +69,7 @@ class HomeFragment : Fragment() {
             startActivityForResult(Intent.createChooser(intent, "Select Osm Source File"), 100);*/
             thread.start()
         }
-        thisView.findViewById<ImageButton?>(R.id.import_button)?.setOnClickListener(listener)
+        thisView.findViewById<Button?>(R.id.import_button)?.setOnClickListener(listener)
         return thisView
     }
 
