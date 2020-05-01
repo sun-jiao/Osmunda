@@ -23,7 +23,7 @@ import moe.sunjiao.osmunda.Osmunda
 import moe.sunjiao.osmunda.geocoder.ReverseGeocoder
 import moe.sunjiao.osmunda.model.ImportOption
 import moe.sunjiao.osmunda.model.SearchResult
-import moe.sunjiao.osmunda.reader.OsmReader
+import moe.sunjiao.osmunda.reader.Reader
 import moe.sunjiao.osmunda.reader.OsmosisReader
 import moe.sunjiao.osmundademo.R
 import java.io.File
@@ -31,7 +31,7 @@ import java.util.*
 
 
 class HomeFragment : Fragment() {
-    val reader : OsmReader = OsmosisReader()
+    val reader : Reader = OsmosisReader()
     val TAG = "Home"
 
     override fun onCreateView(

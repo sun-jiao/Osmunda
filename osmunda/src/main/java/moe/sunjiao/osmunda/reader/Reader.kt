@@ -4,7 +4,7 @@ import android.content.Context
 import moe.sunjiao.osmunda.model.ImportOption
 import java.io.File
 
-interface OsmReader {
+interface Reader {
 
 
     @Throws(Exception::class)
