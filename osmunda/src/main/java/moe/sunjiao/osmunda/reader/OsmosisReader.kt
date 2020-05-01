@@ -3,6 +3,7 @@ package moe.sunjiao.osmunda.reader
 import android.content.Context
 import crosby.binary.osmosis.OsmosisReader
 import moe.sunjiao.osmunda.model.ImportOption
+import moe.sunjiao.osmunda.writer.SQLiteWriter
 import org.openstreetmap.osmosis.core.container.v0_6.EntityContainer
 import org.openstreetmap.osmosis.core.domain.v0_6.*
 import org.openstreetmap.osmosis.core.task.v0_6.RunnableSource
@@ -73,7 +74,11 @@ class OsmosisReader :OsmReader, Sink {
         if (!file.exists())
             throw FileNotFoundException("File Not Found")
 
-        writer = SQLiteWriter(context, databaseName, commitFrequency)
+        writer = SQLiteWriter(
+            context,
+            databaseName,
+            commitFrequency
+        )
 
         isReading = true
 
