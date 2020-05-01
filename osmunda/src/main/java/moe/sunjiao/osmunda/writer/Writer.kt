@@ -1,10 +1,10 @@
 package moe.sunjiao.osmunda.writer
 
-import android.content.ContentValues
-import android.content.Context
 import org.openstreetmap.osmosis.core.domain.v0_6.*
 
-interface OsmWriter{
+interface Writer{
+    val read : Long
+    val insert : Long
     fun checkCommit()
     fun commit()
     fun insertNode(node : Node)

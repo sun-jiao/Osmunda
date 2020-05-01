@@ -9,9 +9,9 @@ import moe.sunjiao.osmunda.Osmunda
 import moe.sunjiao.osmunda.model.OsmType
 import org.openstreetmap.osmosis.core.domain.v0_6.*
 
-class SQLiteWriter (context : Context, databaseName: String, private val commitFrequency : Int = 5000): OsmWriter {
-    var read: Long = 0
-    var insert : Long = 0
+class SQLiteWriter (context : Context, databaseName: String, private val commitFrequency : Int = 5000): Writer {
+    override var read: Long = 0
+    override var insert : Long = 0
     private var commitCount = 1
     private val TAG = "SQLiteWriter"
     private var batchCount: Long = 0

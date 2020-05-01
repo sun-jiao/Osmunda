@@ -3,6 +3,7 @@ package moe.sunjiao.osmunda.reader
 import android.content.Context
 import crosby.binary.osmosis.OsmosisReader
 import moe.sunjiao.osmunda.model.ImportOption
+import moe.sunjiao.osmunda.writer.Writer
 import moe.sunjiao.osmunda.writer.SQLiteWriter
 import org.openstreetmap.osmosis.core.container.v0_6.EntityContainer
 import org.openstreetmap.osmosis.core.domain.v0_6.*
@@ -15,7 +16,7 @@ import java.io.FileInputStream
 import java.io.FileNotFoundException
 import java.util.*
 
-class OsmosisReader :OsmReader, Sink {
+class OsmosisReader :Reader, Sink {
     override val parserName: String = "Osmosis"
     override var read:() -> Long = {
         if (::writer.isInitialized)
@@ -39,7 +40,7 @@ class OsmosisReader :OsmReader, Sink {
 
     var commitFrequency : Int = 5000
     private var expectedRecordCount: Double = 0.00
-    lateinit var writer : SQLiteWriter
+    lateinit var writer : Writer
 
     override val progress:()-> Double = {
         if (isReading) {
