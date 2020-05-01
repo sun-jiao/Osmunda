@@ -79,7 +79,7 @@ reader.readData (File (requireContext (). filesDir.absolutePath + "/hubei-latest
 
 ## Get import status
 
-Use `reader.read` to get the number of OSM records read, and `reader.insert` to get the number of OSM records inserted into the database. (For the reason of difference between them, please refer to [Performance / Improve Performance](#Improve Performance))
+Use `reader.read` to get the number of OSM records read, and `reader.insert` to get the number of OSM records inserted into the database. (For the reason of difference between them, please refer to [commitFrequency](#commitFrequency) )
 
 Use `reader.progress` to get the current estimated progress as a percentage.
 
@@ -177,7 +177,7 @@ The data file in a large areas is not necessarily larger than ones in small area
 
 You can also choose whether to import relation data and way data according to the needs of your application. For the specific code, see [Import](#Import)
 
-## commitFrequency (commit frequency)
+## commitFrequency
 
 Since the read operation occurs in the Osmosis instead of *Osmunda*, the OsmosisReader class in *Osmunda* is only called after the Osmosis reads an element. The `process()` function cannot be included in the same transaction.
 
