@@ -47,9 +47,9 @@ dependencies {
 }
 ```
 
-## Data import
+## Import
 
-For data Source, see [OSM data website](#OSM data website)
+For data Source, see [OSM data website](#OSM_data_website)
 
 Instantiate an OsmosisReader.
 
@@ -175,7 +175,7 @@ The decompressed database file is 198.67 MiB (208,318,464 bytes), approximately 
 
 The data file in a large areas is not necessarily larger than ones in small areas, it is also infected by the local population, density of human settlements, and economic development. It is also related to the availability of Open Street Map services. For example, Guangdong is a populated and developed province and it has 73M of data, while the sparsely populated Xinjiang and Tibet only have 17M and 18M of data (all in pbf format). Please arrange your application according to the actual size of the data. If there is no available data, you can go to overpass-api https://overpass-api.de/api/map?bbox=min_longitude,min_latitude,max_longitude,max_latitude.
 
-You can also choose whether to import relation data and way data according to the needs of your application. For the specific code, see [Data import](#Data import)
+You can also choose whether to import relation data and way data according to the needs of your application. For the specific code, see [Import](#Import)
 
 ## commitFrequency (commit frequency)
 
