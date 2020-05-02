@@ -4,7 +4,6 @@ import android.app.Activity.RESULT_OK
 import android.content.ContentResolver
 import android.content.Context
 import android.content.Intent
-import android.database.sqlite.SQLiteDatabase
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
@@ -14,15 +13,12 @@ import android.provider.MediaStore
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
-import android.view.View.OnClickListener
 import android.view.ViewGroup
 import android.widget.ProgressBar
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.fragment_home.*
-import moe.sunjiao.osmunda.Osmunda
-import moe.sunjiao.osmunda.geocoder.ReverseGeocoder
 import moe.sunjiao.osmunda.model.ImportOption
-import moe.sunjiao.osmunda.model.SearchResult
 import moe.sunjiao.osmunda.reader.OsmosisReader
 import moe.sunjiao.osmunda.reader.Reader
 import moe.sunjiao.osmundademo.R
@@ -31,6 +27,7 @@ import java.util.*
 
 
 class HomeFragment : Fragment() {
+    private lateinit var file: File
     val reader : Reader = OsmosisReader()
     val TAG = "Home"
 
@@ -47,20 +44,23 @@ class HomeFragment : Fragment() {
         reader.options.add(ImportOption.INCLUDE_RELATIONS)
         reader.options.add(ImportOption.INCLUDE_WAYS)
 
-        val listener : OnClickListener = OnClickListener {
-            /*val intent = Intent()
-            intent.type = "*//*"
-            intent.action = Intent.ACTION_GET_CONTENT;
-            startActivityForResult(Intent.createChooser(intent, "Select Osm Source File"), 100);*/
-            thread.start()
+        select_button.setOnClickListener{
+            val intent = Intent()
+            intent.type = "*/*"
+            intent.action = Intent.ACTION_GET_CONTENT
+            startActivityForResult(Intent.createChooser(intent, "Select Osm Source File"), 100)
         }
-        import_button.setOnClickListener(listener)
+
+        database_name.addTextChangedListener()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (requestCode == 100 && resultCode == RESULT_OK){
-
-            val start = System.currentTimeMillis()
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == 100 && resultCode == RESULT_OK && data != null){
+            val uri = data.data
+            val path = uri?.path
+            Log.i(TAG, path?: "")
+            file = File(path)
             val task: TimerTask = object : TimerTask() {
                 override fun run() {
                     val message = handler.obtainMessage()
@@ -71,9 +71,8 @@ class HomeFragment : Fragment() {
             }
             val timer = Timer(true)
 
-            timer.schedule(task, 0, 1000)
+            timer.schedule(task, 0, 500)
         }
-        super.onActivityResult(requestCode, resultCode, data)
     }
 
     val handler = object : Handler(Looper.getMainLooper()) {
@@ -83,7 +82,6 @@ class HomeFragment : Fragment() {
                 0-> {
                     val array : Array<Any> = msg.obj as Array<Any>
                     (array[1] as ProgressBar).progress = (array[0] as Double).toInt()
-
                 }
                 else -> {
                 }

@@ -14,4 +14,5 @@
     <string name="default_progress">No data importing now.</string>
     <string name="database_name">Database Name</string>
     <string name="select">Select</string>
+    <string name="datafile_name">Data File Name</string>
 </resources>
