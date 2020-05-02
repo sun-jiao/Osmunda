@@ -78,12 +78,4 @@ class MainActivity : AppCompatActivity() {
             }
         })
     }
-
-    fun getDatabase() : SQLiteDatabase {
-        return Osmunda(applicationContext).getDatabaseByName("hubei")
-    }
-
-    fun getContext() : Context{
-            return applicationContext
-        }
 }

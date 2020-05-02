@@ -10,15 +10,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
-import android.widget.EditText
-import android.widget.ListView
 import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.fragment_forward.*
-import kotlinx.android.synthetic.main.fragment_forward.view.*
-import kotlinx.android.synthetic.main.fragment_home.*
+import moe.sunjiao.osmunda.Osmunda
 import moe.sunjiao.osmunda.geocoder.Geocoder
 import moe.sunjiao.osmunda.model.SearchResult
-import moe.sunjiao.osmundademo.MainActivity
 import moe.sunjiao.osmundademo.R
 
 class ForwardFragment : Fragment() {
@@ -28,17 +24,19 @@ class ForwardFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val thisView: View = inflater.inflate(R.layout.fragment_home,container,false)
+        return inflater.inflate(R.layout.fragment_forward,container,false)
+    }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         val TAG = "ForwardFragment"
 
-        val stringList : List<String> = listOf()
+        val stringList : MutableList<String> = mutableListOf()
 
         val adapter = ArrayAdapter(requireContext(),
             android.R.layout.simple_list_item_1,  stringList)
 
-        val resultList = thisView.findViewById<ListView>(R.id.result_list)
-        resultList.adapter = adapter
+        result_list.adapter = adapter
 
         val handler : Handler = object : Handler(Looper.getMainLooper()){
             override fun handleMessage(msg: Message){
@@ -46,21 +44,26 @@ class ForwardFragment : Fragment() {
             }
         }
 
-        val placeName = thisView.findViewById<EditText>(R.id.place_name)
-
-        geocode_button.setOnClickListener {
-            val keyWord = placeName.text.toString()
-            val hubeiDatabase: SQLiteDatabase = MainActivity::getDatabase.call(arguments)
-            val list: List<SearchResult> = Geocoder(hubeiDatabase).search(keyWord, 100, 0, 30.7324, 114.6589, 30.3183, 114.0588)
+        val thread = Thread(Runnable {
+            Log.i(TAG, "start search")
+            val keyWord = place_name.text.toString()
+            val database: SQLiteDatabase = getDatabase()
+            val list: List<SearchResult> = Geocoder(database).search(keyWord, 10, 0, 30.7324, 114.6589, 30.3183, 114.0588)
+            Log.i(TAG, "complete")
             for (result in list) {
                 val address = result.toAddress()
+                Log.i(TAG, result.name + "  " + result.databaseId + "  " + address.fullAddress)
 
                 val message = handler.obtainMessage()
                 message.obj = address.fullAddress
                 handler.sendMessage(message)
             }
-        }
+        })
 
-        return thisView
+        geocode_button.setOnClickListener { thread.start() }
+    }
+
+    private fun getDatabase() : SQLiteDatabase {
+        return Osmunda(requireContext()).getDatabaseByName("hubei")
     }
 }

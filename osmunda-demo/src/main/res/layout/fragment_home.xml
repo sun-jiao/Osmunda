@@ -14,18 +14,24 @@
         <EditText
             android:id="@+id/database_name"
             android:layout_width="0dp"
-            android:layout_weight="3"
+            android:layout_weight="8"
             android:layout_height="wrap_content"
             android:hint="@string/database_name"
             android:inputType="textNoSuggestions"
             android:textColor="@color/colorAccent"
             android:importantForAutofill="no"
             />
-
+        <Button
+            android:id="@+id/select_button"
+            android:layout_width="0dp"
+            android:layout_weight="3"
+            android:layout_height="wrap_content"
+            android:tint="@android:color/black"
+            android:text="@string/select" />
         <Button
             android:id="@+id/import_button"
             android:layout_width="0dp"
-            android:layout_weight="1"
+            android:layout_weight="3"
             android:layout_height="wrap_content"
             android:tint="@android:color/black"
             android:text="@string/importing" />
