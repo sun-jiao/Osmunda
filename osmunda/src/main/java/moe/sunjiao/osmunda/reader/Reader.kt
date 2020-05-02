@@ -12,9 +12,9 @@ interface Reader {
 
     val parserName: String
     val options: MutableSet<ImportOption>
-    var read: () -> Long
+    val read: Long
     var elementCount: Long
     val batchSize: Int
-    val progress: () -> Double
-    var insert: () -> Long
+    val progress: Double
+    val insert: Long
 }

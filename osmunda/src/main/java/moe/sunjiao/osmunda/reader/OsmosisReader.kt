@@ -18,20 +18,22 @@ import java.util.*
 
 class OsmosisReader :Reader, Sink {
     override val parserName: String = "Osmosis"
-    override var read:() -> Long = {
-        if (::writer.isInitialized)
-            writer.read
-        else
-            0
+    override val read : Long
+        get() {
+            return if (::writer.isInitialized)
+                writer.read
+            else
+                0
     }
     override var batchSize = 100
     override var elementCount: Long = 0
     override val options: MutableSet<ImportOption> = HashSet<ImportOption>()
-    override var insert :() -> Long = {
-        if (::writer.isInitialized)
-            writer.insert
-        else
-            0
+    override val insert : Long
+        get() {
+            return if (::writer.isInitialized)
+                writer.insert
+            else
+                0
     }
 
     private var isReading = false
@@ -42,11 +44,12 @@ class OsmosisReader :Reader, Sink {
     private var expectedRecordCount: Double = 0.00
     lateinit var writer : Writer
 
-    override val progress:()-> Double = {
-        if (isReading) {
-             (read() * readProportion + insert() * insertProportion.toDouble()) / (expectedRecordCount * (readProportion + insertProportion))
-        } else
-             (-1).toDouble()
+    override val progress : Double
+        get() {
+            return if (isReading) {
+                (read * readProportion + insert * insertProportion.toDouble()) / (expectedRecordCount * (readProportion + insertProportion))
+            } else
+                (-1).toDouble()
     }
 
     @Throws(Exception::class)
@@ -105,7 +108,7 @@ class OsmosisReader :Reader, Sink {
         if (isPbf){
             fis!!.close()
         }
-        println("Total import time - " + (System.currentTimeMillis() - start) + "ms, total elements processed " + elementCount + " inserts " + read())
+        println("Total import time - " + (System.currentTimeMillis() - start) + "ms, total elements processed " + elementCount + " inserts " + read)
         isReading = false
     }
 
