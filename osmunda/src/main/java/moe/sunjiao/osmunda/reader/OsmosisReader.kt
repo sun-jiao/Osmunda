@@ -88,18 +88,24 @@ class OsmosisReader :Reader, Sink {
 
     override fun readData(uri: Uri, context: Context, databaseName: String) {
         val pathString = uri.path ?: throw java.lang.IllegalArgumentException()
-        if (!pathString.toLowerCase(Locale.ROOT).endsWith(".pbf"))
-            throw java.lang.IllegalArgumentException("Only pbf file supported for android.net.Uri.")
-
-        val reader: RunnableSource
         val fis: InputStream = context.contentResolver.openInputStream(uri) ?: throw java.lang.IllegalArgumentException()
+        val reader: RunnableSource
         val start = System.currentTimeMillis()
-        val isPbf = true
+        var isPbf = false
+        expectedRecordCount = 0.1968 * fis.available()
 
-        reader = OsmosisReader(fis)
-        expectedRecordCount = 0.33075 * fis.available()
-        readProportion = 2
-        insertProportion = 11
+        if (pathString.toLowerCase(Locale.ROOT).endsWith(".pbf")){
+            reader = OsmosisReader(fis)
+            isPbf = true
+            expectedRecordCount = 0.33075 * fis.available()
+            readProportion = 2
+            insertProportion = 11
+        } else if (pathString.toLowerCase(Locale.ROOT).endsWith(".gz")){
+            reader = org.openstreetmap.osmosis.xml.v0_7.XmlReader(fis, false, CompressionMethod.GZip)
+        } else if (pathString.toLowerCase(Locale.ROOT).endsWith(".bz2")){
+            reader = org.openstreetmap.osmosis.xml.v0_7.XmlReader(fis, false, CompressionMethod.BZip2)
+        } else
+            throw java.lang.IllegalArgumentException()
 
         reading(context, databaseName, reader, isPbf, fis, start)
     }
