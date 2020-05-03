@@ -1,4 +1,4 @@
-package org.openstreetmap.osmosis.xml.v0_7;
+package moe.sunjiao.osmunda.reader;
 
 import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 import org.openstreetmap.osmosis.core.task.v0_6.RunnableSource;
@@ -74,7 +74,7 @@ public class XmlReader implements RunnableSource {
 	 * @param compressionMethod
 	 *            Specifies the compression method to employ.
 	 */
-	public XmlReader(InputStream inputStream, boolean enableDateParsing, CompressionMethod compressionMethod) throws FileNotFoundException {
+	public XmlReader(InputStream inputStream, boolean enableDateParsing, CompressionMethod compressionMethod) {
 		this.enableDateParsing = enableDateParsing;
 		this.compressionMethod = compressionMethod;
 
@@ -119,7 +119,7 @@ public class XmlReader implements RunnableSource {
 			parser.parse(inputStream, new OsmHandler(sink, enableDateParsing));
 			
 			sink.complete();
-			
+
 		} catch (SAXParseException e) {
 			throw new OsmosisRuntimeException(
 				printString

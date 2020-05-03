@@ -12,7 +12,6 @@ import org.openstreetmap.osmosis.core.domain.v0_6.*
 import org.openstreetmap.osmosis.core.task.v0_6.RunnableSource
 import org.openstreetmap.osmosis.core.task.v0_6.Sink
 import org.openstreetmap.osmosis.xml.common.CompressionMethod
-import org.openstreetmap.osmosis.xml.v0_7.XmlReader
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileNotFoundException
@@ -127,8 +126,8 @@ class OsmosisReader :Reader, Sink {
                 )
             }
         }
-
-
+        val e : Exception = java.lang.Exception()
+        println(e)
         isReading = true
 
         reader.setSink(this)
