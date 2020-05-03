@@ -54,7 +54,7 @@ For data Source, see [OSM data website](#OSM_data_website)
 Instantiate an OsmosisReader.
 
 ```kotlin
-val reader: OsmReader = OsmosisReader()
+val reader: Reader = OsmosisReader()
 ```
 
 Set import relations and ways data, if you don't need them, please do not write the following code. See [Storage](#Storage)
