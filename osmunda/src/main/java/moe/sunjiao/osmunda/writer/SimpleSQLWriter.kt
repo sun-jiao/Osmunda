@@ -26,7 +26,7 @@ class SimpleSQLWriter (context : Context, databaseName: String, private val comm
         database = Osmunda(context).getDatabaseByName(databaseName)
         database.execSQL("CREATE TABLE IF NOT EXISTS \"nodes\" (\"id\" INTEGER PRIMARY KEY  NOT NULL , \"lat\" DOUBLE NOT NULL , \"lon\" DOUBLE NOT NULL)")
         database.execSQL("CREATE TABLE IF NOT EXISTS \"relation_members\" (\"type\" TEXT NOT NULL , \"member_id\" INTEGER NOT NULL , \"role\" TEXT, \"relation_id\" INTEGER NOT NULL,\"insert_id\" INTEGER NOT NULL, PRIMARY KEY( \"relation_id\",\"member_id\",\"insert_id\" ))")
-        database.execSQL("CREATE TABLE IF NOT EXISTS \"tag\" (\"id\" INTEGER NOT NULL , \"k\" TEXT NOT NULL , \"v\" TEXT NOT NULL , PRIMARY KEY( \"reftype\",\"k\" ,\"id\" )   )")
+        database.execSQL("CREATE TABLE IF NOT EXISTS \"tag\" (\"id\" INTEGER NOT NULL , \"k\" TEXT NOT NULL , \"v\" TEXT NOT NULL , PRIMARY KEY( \"k\" ,\"id\" )   )")
         database.execSQL("CREATE TABLE IF NOT EXISTS \"way_no\" (\"way_id\" INTEGER NOT NULL , \"node_id\" INTEGER NOT NULL, \"insert_id\" INTEGER NOT NULL,  PRIMARY KEY (\"way_id\", \"node_id\",\"insert_id\")  )  ")
     }
 
