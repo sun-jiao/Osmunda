@@ -17,4 +17,5 @@ interface Reader {
     val batchSize: Int
     val progress: Double
     val insert: Long
+    var writerType : WriterType
 }
