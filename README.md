@@ -54,7 +54,7 @@ For data Source, see [OSM data website](#OSM_data_website)
 Instantiate an OsmosisReader.
 
 ```kotlin
-val reader: OsmReader = OsmosisReader ()
+val reader: OsmReader = OsmosisReader()
 ```
 
 Set import relations and ways data, if you don't need them, please do not write the following code. See [Storage](#Storage)
@@ -67,7 +67,7 @@ reader.options.add (ImportOption.INCLUDE_WAYS) // Import ways data
 Set the commit frequency, otherwise the default setting (5,000) will be used. See [commitFrequency](#commitFrequency)
 
 ```
-(reader as OsmosisReader).commitFrequency = 100000
+(reader as OsmosisReader).commitFrequency = 5000
 ```
 
 Set the OSM data file, context and database file name, and start reading.
