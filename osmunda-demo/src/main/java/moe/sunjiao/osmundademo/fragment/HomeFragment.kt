@@ -53,7 +53,7 @@ class HomeFragment : Fragment() {
             startActivityForResult(Intent.createChooser(intent, "Select Osm Source File"), 100)
         }
 
-        import_button.setOnClickListener {
+        val thread = Thread(Runnable {
             val databaseName = database_name.text.toString()
             if (this::file.isInitialized && databaseName != ""){
                 reader.readData(file, requireContext(), databaseName)
@@ -69,8 +69,12 @@ class HomeFragment : Fragment() {
 
                 timer.schedule(task, 0, 500)
             } else {
-
+                Toast.makeText(requireContext(), "select file and input a name!", LENGTH_LONG).show()
             }
+        })
+
+        import_button.setOnClickListener {
+           thread.start()
         }
     }
 
