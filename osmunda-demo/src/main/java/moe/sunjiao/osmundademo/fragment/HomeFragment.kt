@@ -1,15 +1,11 @@
 package moe.sunjiao.osmundademo.fragment
 
 import android.app.Activity.RESULT_OK
-import android.content.ContentResolver
-import android.content.Context
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.os.Message
-import android.provider.MediaStore
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -21,6 +17,7 @@ import kotlinx.android.synthetic.main.fragment_home.*
 import moe.sunjiao.osmunda.model.ImportOption
 import moe.sunjiao.osmunda.reader.OsmosisReader
 import moe.sunjiao.osmunda.reader.Reader
+import moe.sunjiao.osmunda.reader.WriterType
 import moe.sunjiao.osmundademo.R
 import java.io.File
 import java.util.*
@@ -43,6 +40,7 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         reader.options.add(ImportOption.INCLUDE_RELATIONS)
         reader.options.add(ImportOption.INCLUDE_WAYS)
+        reader.writerType = WriterType.SIMPLE_SQL_WRITER
 
         select_button.setOnClickListener{
             val intent = Intent()
@@ -75,43 +73,20 @@ class HomeFragment : Fragment() {
         }
     }
 
-    val handler = object : Handler(Looper.getMainLooper()) {
+    private val handler = object : Handler(Looper.getMainLooper()) {
 
         override fun handleMessage(msg: Message) {
             when (msg.what) {
                 0-> {
-                    val array : Array<Any> = msg.obj as Array<Any>
-                    (array[1] as ProgressBar).progress = (array[0] as Double).toInt()
+                    if (msg.obj is Array<*>){
+                        val array : Array<Any> = msg.obj as Array<Any>
+                        if (array[0] is Double && array[1] is ProgressBar)
+                            (array[1] as ProgressBar).progress = (array[0] as Double).toInt()
+                    }
                 }
                 else -> {
                 }
             }
         }
-    }
-
-    fun getPath(context: Context, path: String): String? {
-        val uri = Uri.parse(path) ?: return null
-        var data: String? = null
-        if (path.length > 8 && path.substring(0, 8) == "content:") {
-            val scheme = uri.scheme
-            if (scheme == null) data =
-                uri.path else if (ContentResolver.SCHEME_FILE == scheme) {
-                data = uri.path
-            } else if (ContentResolver.SCHEME_CONTENT == scheme) {
-                val cursor = context.contentResolver.query(uri, arrayOf(MediaStore.Images.ImageColumns.DATA), null, null, null)
-                if (null != cursor) {
-                    if (cursor.moveToFirst()) {
-                        val index = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA)
-                        if (index > -1) {
-                            data = cursor.getString(index)
-                        }
-                    }
-                    cursor.close()
-                }
-            }
-        } else {
-            return path
-        }
-        return data
     }
 }

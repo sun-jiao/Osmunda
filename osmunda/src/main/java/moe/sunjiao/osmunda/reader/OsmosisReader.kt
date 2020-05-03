@@ -5,6 +5,7 @@ import crosby.binary.osmosis.OsmosisReader
 import moe.sunjiao.osmunda.model.ImportOption
 import moe.sunjiao.osmunda.writer.Writer
 import moe.sunjiao.osmunda.writer.SQLiteWriter
+import moe.sunjiao.osmunda.writer.SimpleSQLWriter
 import org.openstreetmap.osmosis.core.container.v0_6.EntityContainer
 import org.openstreetmap.osmosis.core.domain.v0_6.*
 import org.openstreetmap.osmosis.core.task.v0_6.RunnableSource
@@ -44,6 +45,8 @@ class OsmosisReader :Reader, Sink {
     private var expectedRecordCount: Double = 0.00
     lateinit var writer : Writer
 
+    override var writerType : WriterType = WriterType.SQLITE_WRITER
+
     override val progress : Double
         get() {
             return if (isReading) {
@@ -78,11 +81,23 @@ class OsmosisReader :Reader, Sink {
         if (!file.exists())
             throw FileNotFoundException("File Not Found")
 
-        writer = SQLiteWriter(
-            context,
-            databaseName,
-            commitFrequency
-        )
+        when(writerType){
+            WriterType.SIMPLE_SQL_WRITER -> {
+                writer = SimpleSQLWriter(
+                    context,
+                    databaseName,
+                    commitFrequency
+                )
+            }
+            else -> {
+                writer = SQLiteWriter(
+                    context,
+                    databaseName,
+                    commitFrequency
+                )
+            }
+        }
+
 
         isReading = true
 
