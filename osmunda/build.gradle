@@ -43,11 +43,10 @@ dependencies {
     implementation 'org.apache.commons:commons-compress:1.18'
     testImplementation 'junit:junit:4.12'
 
-    implementation 'org.openstreetmap.osmosis:osmosis-core:0.47.3'
-    implementation 'org.openstreetmap.osmosis:osmosis-pbf:0.47.3'
-    implementation 'org.openstreetmap.osmosis:osmosis-osm-binary:0.47.3'
-    implementation 'org.openstreetmap.osmosis:osmosis-core:0.47.3'
-    implementation 'org.openstreetmap.osmosis:osmosis-xml:0.47.3'
+    api 'org.openstreetmap.osmosis:osmosis-core:0.47.3'
+    api 'org.openstreetmap.osmosis:osmosis-pbf:0.47.3'
+    api 'org.openstreetmap.osmosis:osmosis-osm-binary:0.47.3'
+    api 'org.openstreetmap.osmosis:osmosis-xml:0.47.3'
 
     implementation 'org.osmdroid:osmdroid-android:6.1.6'
 }
