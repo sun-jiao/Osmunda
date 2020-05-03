@@ -23,7 +23,8 @@ class ReverseGeocoder(val database: SQLiteDatabase) {
         val lon = longitude.toString()
         val resultList: MutableList<SearchResult> = ArrayList<SearchResult>()
         try {
-            val cursor: Cursor = database.rawQuery("SELECT * FROM tag left join way_no on tag.id = way_no.way_id left join nodes on tag.id=nodes.id or nodes.id=way_no.node_id where k = \"name\" and lat > ? -0.1 and lat < ? +0.1 and lon > ? -0.1 and lon < ? +0.1 group by tag.id order by (lat - ?) * (lat - ?) + (lon - ?) * (lon - ?)  asc limit ? offset ? ", arrayOf(lat, lat, lon, lon, lat, lat, lon, lon, limit.toString(),offset.toString()))
+            val cursor: Cursor = database.rawQuery("SELECT * FROM tag left join way_no on tag.id = way_no.way_id left join nodes on tag.id=nodes.id or nodes.id=way_no.node_id where k = \"name\" and lat > ? -0.1 and lat < ? +0.1 and lon > ? -0.1 and lon < ? +0.1 group by tag.v order by (lat - ?) * (lat - ?) + (lon - ?) * (lon - ?)  asc limit ? offset ? ",
+                arrayOf(lat, lat, lon, lon, lat, lat, lon, lon, limit.toString(),offset.toString()))
             while (cursor.moveToNext()) {
                 val type = cursor.getInt(cursor.getColumnIndex("reftype"))
                 val rowType: OsmType = OsmType.values()[type]
@@ -77,6 +78,30 @@ class ReverseGeocoder(val database: SQLiteDatabase) {
     ): List<SearchResult> {
         val lat: Double = location.latitude
         val lon: Double = location.longitude
+        return search(lat,lon,limit,offset)
+    }
+
+    @Throws(Exception::class)
+    fun search(
+        latitude: String,
+        longitude: String,
+        limit: Int = 1,
+        offset: Int = 0
+    ): List<SearchResult> {
+        val lat: Double = latitude.toDouble()
+        val lon: Double = longitude.toDouble()
+        return search(lat,lon,limit,offset)
+    }
+
+    @Throws(Exception::class)
+    fun search(
+        latitude: Float,
+        longitude: Float,
+        limit: Int = 1,
+        offset: Int = 0
+    ): List<SearchResult> {
+        val lat: Double = latitude.toDouble()
+        val lon: Double = longitude.toDouble()
         return search(lat,lon,limit,offset)
     }
 }
