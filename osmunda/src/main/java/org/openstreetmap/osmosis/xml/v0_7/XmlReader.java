@@ -1,4 +1,3 @@
-// This software is released into the Public Domain.  See copying.txt for details.
 package org.openstreetmap.osmosis.xml.v0_7;
 
 import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
@@ -79,6 +78,9 @@ public class XmlReader implements RunnableSource {
 		this.enableDateParsing = enableDateParsing;
 		this.compressionMethod = compressionMethod;
 
+		if (inputStream == null) {
+			throw new Error("Null input");
+		}
 		this.inputStream = inputStream;
 
 		file = null;
