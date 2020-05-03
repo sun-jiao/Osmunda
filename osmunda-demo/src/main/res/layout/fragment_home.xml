@@ -12,6 +12,33 @@
         android:orientation="horizontal"
         android:layout_marginHorizontal="16dp"
         android:layout_marginTop="16dp">
+
+        <TextView
+            android:id="@+id/datafile_name"
+            android:layout_width="0dp"
+            android:layout_weight="11"
+            android:layout_height="wrap_content"
+            android:hint="@string/datafile_name"
+            android:textColor="@color/colorAccent"
+            android:importantForAutofill="no"
+            />
+
+        <Button
+            android:id="@+id/select_button"
+            android:layout_width="0dp"
+            android:layout_weight="3"
+            android:layout_height="wrap_content"
+            android:tint="@android:color/black"
+            android:text="@string/select" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginHorizontal="16dp">
+
         <EditText
             android:id="@+id/database_name"
             android:layout_width="0dp"
@@ -30,31 +57,6 @@
             android:layout_height="wrap_content"
             android:tint="@android:color/black"
             android:text="@string/importing" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginHorizontal="16dp">
-        <TextView
-            android:id="@+id/datafile_name"
-            android:layout_width="0dp"
-            android:layout_weight="11"
-            android:layout_height="wrap_content"
-            android:hint="@string/datafile_name"
-            android:textColor="@color/colorAccent"
-            android:importantForAutofill="no"
-            />
-
-        <Button
-            android:id="@+id/select_button"
-            android:layout_width="0dp"
-            android:layout_weight="3"
-            android:layout_height="wrap_content"
-            android:tint="@android:color/black"
-            android:text="@string/select" />
 
     </LinearLayout>
 

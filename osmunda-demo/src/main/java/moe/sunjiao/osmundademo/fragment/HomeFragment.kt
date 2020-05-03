@@ -2,6 +2,7 @@ package moe.sunjiao.osmundademo.fragment
 
 import android.app.Activity.RESULT_OK
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -11,6 +12,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ProgressBar
+import android.widget.Toast
+import android.widget.Toast.LENGTH_LONG
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.fragment_home.*
@@ -20,11 +23,12 @@ import moe.sunjiao.osmunda.reader.Reader
 import moe.sunjiao.osmunda.reader.WriterType
 import moe.sunjiao.osmundademo.R
 import java.io.File
+import java.net.URI
 import java.util.*
 
 
 class HomeFragment : Fragment() {
-    private lateinit var file: File
+    private lateinit var file: Uri
     val reader : Reader = OsmosisReader()
     val TAG = "Home"
 
@@ -49,27 +53,33 @@ class HomeFragment : Fragment() {
             startActivityForResult(Intent.createChooser(intent, "Select Osm Source File"), 100)
         }
 
-        database_name.addTextChangedListener()
+        import_button.setOnClickListener {
+            val databaseName = database_name.text.toString()
+            if (this::file.isInitialized && databaseName != ""){
+                reader.readData(file, requireContext(), databaseName)
+                val task: TimerTask = object : TimerTask() {
+                    override fun run() {
+                        val message = handler.obtainMessage()
+                        message.obj = arrayOf(reader.progress, import_progress)
+                        message.what = 0
+                        handler.sendMessage(message)
+                    }
+                }
+                val timer = Timer(true)
+
+                timer.schedule(task, 0, 500)
+            } else {
+
+            }
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == 100 && resultCode == RESULT_OK && data != null){
-            val uri = data.data
-            val path = uri?.path
-            Log.i(TAG, path?: "")
-            file = File(path)
-            val task: TimerTask = object : TimerTask() {
-                override fun run() {
-                    val message = handler.obtainMessage()
-                    message.obj = arrayOf(reader.progress, import_progress)
-                    message.what = 0
-                    handler.sendMessage(message)
-                }
-            }
-            val timer = Timer(true)
-
-            timer.schedule(task, 0, 500)
+            file = data.data!!
+        } else {
+            Toast.makeText(requireContext(), "file incorrect", LENGTH_LONG).show()
         }
     }
 

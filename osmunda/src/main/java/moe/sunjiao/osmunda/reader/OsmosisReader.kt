@@ -1,11 +1,12 @@
 package moe.sunjiao.osmunda.reader
 
 import android.content.Context
+import android.net.Uri
 import crosby.binary.osmosis.OsmosisReader
 import moe.sunjiao.osmunda.model.ImportOption
-import moe.sunjiao.osmunda.writer.Writer
 import moe.sunjiao.osmunda.writer.SQLiteWriter
 import moe.sunjiao.osmunda.writer.SimpleSQLWriter
+import moe.sunjiao.osmunda.writer.Writer
 import org.openstreetmap.osmosis.core.container.v0_6.EntityContainer
 import org.openstreetmap.osmosis.core.domain.v0_6.*
 import org.openstreetmap.osmosis.core.task.v0_6.RunnableSource
@@ -15,6 +16,7 @@ import org.openstreetmap.osmosis.xml.v0_6.XmlReader
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileNotFoundException
+import java.io.InputStream
 import java.util.*
 
 class OsmosisReader :Reader, Sink {
@@ -58,7 +60,7 @@ class OsmosisReader :Reader, Sink {
     @Throws(Exception::class)
     override fun readData(file: File, context : Context, databaseName: String) {
         val reader: RunnableSource
-        var fis: FileInputStream? = null
+        var fis: InputStream? = null
         val start = System.currentTimeMillis()
         var isPbf = false
 
@@ -81,6 +83,28 @@ class OsmosisReader :Reader, Sink {
         if (!file.exists())
             throw FileNotFoundException("File Not Found")
 
+        reading(context, databaseName,reader, isPbf, fis, start)
+    }
+
+    override fun readData(uri: Uri, context: Context, databaseName: String) {
+        val pathString = uri.path ?: throw java.lang.IllegalArgumentException()
+        if (!pathString.toLowerCase(Locale.ROOT).endsWith(".pbf"))
+            throw java.lang.IllegalArgumentException("Only pbf file supported for android.net.Uri.")
+
+        val reader: RunnableSource
+        val fis: InputStream = context.contentResolver.openInputStream(uri) ?: throw java.lang.IllegalArgumentException()
+        val start = System.currentTimeMillis()
+        val isPbf = true
+
+        reader = OsmosisReader(fis)
+        expectedRecordCount = 0.33075 * fis.available()
+        readProportion = 2
+        insertProportion = 11
+
+        reading(context, databaseName, reader, isPbf, fis, start)
+    }
+
+    private fun reading(context: Context, databaseName: String, reader: RunnableSource, isPbf : Boolean, fis : InputStream?, start: Long){
         when(writerType){
             WriterType.SIMPLE_SQL_WRITER -> {
                 writer = SimpleSQLWriter(
@@ -121,7 +145,7 @@ class OsmosisReader :Reader, Sink {
         println("import finished")
         writer.commit()
         if (isPbf){
-            fis!!.close()
+            fis?.close()
         }
         println("Total import time - " + (System.currentTimeMillis() - start) + "ms, total elements processed " + elementCount + " inserts " + read)
         isReading = false
