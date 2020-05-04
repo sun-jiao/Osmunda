@@ -1,11 +1,8 @@
 package moe.sunjiao.osmunda.model
 
-import android.content.ContentValues.TAG
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
-import android.util.Log
 import java.util.*
-import kotlin.collections.HashMap
 
 class Address(val name: String, databaseId: Long, database: SQLiteDatabase, val latitude: Double, val longitude: Double, private var locale: Locale? = null ) {
     var state: String = ""
