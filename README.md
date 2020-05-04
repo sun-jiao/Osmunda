@@ -70,11 +70,14 @@ Set the commit frequency, otherwise the default setting (5,000) will be used. Se
 (reader as OsmosisReader).commitFrequency = 5000
 ```
 
-Set the OSM data file, context and database file name, and start reading.
+Set the OSM data file or Uri(android.net.Uri), context and database file name, and start reading.
 
 ```kotlin
-reader.readData (File (requireContext (). filesDir.absolutePath + "/hubei-latest.osm.pbf"), requireContext (), "hubei")
-			//filename								context		database filename
+val file = File(requireContext (). filesDir.absolutePath + "/hubei-latest.osm.pbf")
+reader.readData(file, requireContext (), "hubei")
+	//filename	context		database filename(excepted)
+reader.readData(uri, requireContext (), "hubei")
+	//android.net.Uri   context     database filename(excepted)
 ```
 
 ## Get import status

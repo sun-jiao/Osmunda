@@ -64,10 +64,14 @@ reader.options.add(ImportOption.INCLUDE_WAYS)		//导入路径数据
 (reader as OsmosisReader).commitFrequency = 100000
 ```
 
-设置OSM数据文件，context和数据库文件名，开始读取。
+设置OSM数据文件或Uri，context和数据库文件名，开始读取。
 
 ```kotlin
-reader.readData(File(requireContext().filesDir.absolutePath + "/hubei-latest.osm.pbf"), requireContext(), "hubei" )
+val file = File(requireContext (). filesDir.absolutePath + "/hubei-latest.osm.pbf")
+reader.readData(file, requireContext (), "hubei")
+	//OSM数据文件	 context     数据库文件名
+reader.readData(uri, requireContext (), "hubei")
+	//android.net.Uri   context     数据库文件名
 ```
 
 ## 获取导入状态
