@@ -65,7 +65,7 @@ class HomeFragment : Fragment() {
 
                 timer.schedule(task, 0, 500)
             } else {
-                Toast.makeText(requireContext(), "select file and input a name!", LENGTH_LONG).show()
+                Toast.makeText(requireContext(), "select a file and set its name!", LENGTH_LONG).show()
             }
         })
 
@@ -78,6 +78,7 @@ class HomeFragment : Fragment() {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == 100 && resultCode == RESULT_OK && data != null){
             file = data.data!!
+            import_text.text = file.path
         } else {
             Toast.makeText(requireContext(), "file incorrect", LENGTH_LONG).show()
         }

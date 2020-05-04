@@ -6,7 +6,6 @@ class SearchResult (
     val lat: Double,
     val lon: Double,
     val name: String,
-    val type: OsmType,
     val database: SQLiteDatabase,
     val databaseId: Long
 ){

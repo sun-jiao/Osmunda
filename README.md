@@ -16,11 +16,8 @@ pre-release
 
 ### To-do
 
-- More data import options. 
-- Optimizing database structure to avoid the time-consuming query caused by multiple joins.
 - Try to use NOSQL database, because OSM data uses a lot of key-value pairs, so NOSQL database may be a better choice.
-- Statement support in more languages.
-
+- Change method of obtaining administrative divisions in `Address()`.
 # How to use
 
 ## Gradle Settings

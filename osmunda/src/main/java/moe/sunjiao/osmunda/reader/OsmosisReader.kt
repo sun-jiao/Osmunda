@@ -154,6 +154,7 @@ class OsmosisReader :Reader, Sink {
         if (isPbf){
             fis?.close()
         }
+        writer.setIndex()
         println("Total import time - " + (System.currentTimeMillis() - start) + "ms, total elements processed " + elementCount + " inserts " + read)
         isReading = false
     }

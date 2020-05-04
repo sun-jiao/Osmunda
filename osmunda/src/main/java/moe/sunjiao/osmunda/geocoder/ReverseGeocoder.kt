@@ -26,8 +26,6 @@ class ReverseGeocoder(val database: SQLiteDatabase) {
             val cursor: Cursor = database.rawQuery("SELECT * FROM tag left join way_no on tag.id = way_no.way_id left join nodes on tag.id=nodes.id or nodes.id=way_no.node_id where k = \"name\" and lat > ? -0.1 and lat < ? +0.1 and lon > ? -0.1 and lon < ? +0.1 group by tag.v order by (lat - ?) * (lat - ?) + (lon - ?) * (lon - ?)  asc limit ? offset ? ",
                 arrayOf(lat, lat, lon, lon, lat, lat, lon, lon, limit.toString(),offset.toString()))
             while (cursor.moveToNext()) {
-                val type = cursor.getInt(cursor.getColumnIndex("reftype"))
-                val rowType: OsmType = OsmType.values()[type]
                 var databaseId : Long = cursor.getLong(cursor.getColumnIndex("way_id"))
                 if (databaseId == 0L)
                     databaseId = cursor.getLong(cursor.getColumnIndex("id"))
@@ -35,7 +33,7 @@ class ReverseGeocoder(val database: SQLiteDatabase) {
                     SearchResult(cursor.getDouble(cursor.getColumnIndex("lat")),
                         cursor.getDouble(cursor.getColumnIndex("lon")),
                         cursor.getString(cursor.getColumnIndex("v")),
-                        rowType, database, databaseId)
+                         database, databaseId)
                 )
             }
             cursor.close()

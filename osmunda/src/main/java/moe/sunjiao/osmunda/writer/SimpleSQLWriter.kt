@@ -30,6 +30,12 @@ class SimpleSQLWriter (context : Context, databaseName: String, private val comm
         database.execSQL("CREATE TABLE IF NOT EXISTS \"way_no\" (\"way_id\" INTEGER NOT NULL , \"node_id\" INTEGER NOT NULL, \"insert_id\" INTEGER NOT NULL,  PRIMARY KEY (\"way_id\", \"node_id\",\"insert_id\")  )  ")
     }
 
+    override fun setIndex() {
+        database.execSQL("CREATE INDEX tag_index ON tag (id, k)")
+        database.execSQL("CREATE INDEX way_no_index ON way_no (way_id, node_id)")
+        database.execSQL("CREATE INDEX nodes_index ON nodes (id, lat, lon)")
+    }
+
     override fun checkCommit(){
         if (read > (commitCount*commitFrequency).toLong())
             commit()
@@ -149,4 +155,5 @@ class SimpleSQLWriter (context : Context, databaseName: String, private val comm
     override fun insertMember(relation: Relation, member: RelationMember){
         insertMember(relation.id, member.memberType.name, member.memberId, member.memberRole, read)
     }
+
 }

@@ -64,6 +64,6 @@ class ForwardFragment : Fragment() {
     }
 
     private fun getDatabase() : SQLiteDatabase {
-        return Osmunda(requireContext()).getDatabaseByName("hubei")
+        return Osmunda(requireContext()).getDatabaseByName("hubeitest2")
     }
 }

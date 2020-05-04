@@ -13,4 +13,5 @@ interface Writer{
     fun insertWayNode(way: Way, node: WayNode)
     fun insertRelation(relation: Relation)
     fun insertMember(relation: Relation, member: RelationMember)
+    fun setIndex()
 }

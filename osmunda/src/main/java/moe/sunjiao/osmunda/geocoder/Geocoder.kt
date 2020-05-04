@@ -26,15 +26,13 @@ class Geocoder(val database: SQLiteDatabase) {
                     arrayOf("%$searchQueryOptional%", minLat.toString(), maxLat.toString(), minLon.toString(), maxLon.toString(), limit.toString(), offset.toString()))
 
             while (cursor.moveToNext()) {
-                val type = cursor.getInt(cursor.getColumnIndex("reftype"))
-                val rowType: OsmType = OsmType.values()[type]
                 var databaseId : Long = cursor.getLong(cursor.getColumnIndex("way_id"))
                 if (databaseId == 0L)
                     databaseId = cursor.getLong(cursor.getColumnIndex("id"))
                 resultList.add(SearchResult(cursor.getDouble(cursor.getColumnIndex("lat")),
                     cursor.getDouble(cursor.getColumnIndex("lon")),
                     cursor.getString(cursor.getColumnIndex("v")),
-                    rowType, database, databaseId))
+                    database, databaseId))
             }
             cursor.close()
         } catch (ex: Exception) {

@@ -33,6 +33,12 @@ class SQLiteWriter (context : Context, databaseName: String, private val commitF
         database.execSQL("CREATE TABLE IF NOT EXISTS \"ways\" (\"id\" INTEGER PRIMARY KEY  NOT NULL , \"changeset\" INTEGER, \"version\" INTEGER, \"user\" TEXT, \"uid\" INTEGER, \"timestamp\" BIGINT)")
     }
 
+    override fun setIndex() {
+        database.execSQL("CREATE INDEX tag_index ON tag (id, k, v)")
+        database.execSQL("CREATE INDEX way_no_index ON way_no (way_id, node_id)")
+        database.execSQL("CREATE INDEX nodes_index ON nodes (id, lat, lon)")
+    }
+
     override fun checkCommit(){
         if (read > (commitCount*commitFrequency).toLong())
             commit()
