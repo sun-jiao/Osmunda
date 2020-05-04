@@ -25,7 +25,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initView() {
-
         val fragmentList : ArrayList<Fragment> = ArrayList()
         fragmentList.add(ForwardFragment())
         fragmentList.add(HomeFragment())
