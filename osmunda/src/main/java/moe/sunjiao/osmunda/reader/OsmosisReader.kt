@@ -4,6 +4,7 @@ import android.content.Context
 import android.net.Uri
 import crosby.binary.osmosis.OsmosisReader
 import moe.sunjiao.osmunda.model.ImportOption
+import moe.sunjiao.osmunda.model.WriterType
 import moe.sunjiao.osmunda.writer.SQLiteWriter
 import moe.sunjiao.osmunda.writer.SimpleSQLWriter
 import moe.sunjiao.osmunda.writer.Writer

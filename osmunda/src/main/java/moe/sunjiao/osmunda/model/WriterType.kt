@@ -1,4 +1,4 @@
-package moe.sunjiao.osmunda.reader
+package moe.sunjiao.osmunda.model
 
 enum class WriterType {
     SQLITE_WRITER,

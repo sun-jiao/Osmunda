@@ -3,6 +3,7 @@ package moe.sunjiao.osmunda.reader
 import android.content.Context
 import android.net.Uri
 import moe.sunjiao.osmunda.model.ImportOption
+import moe.sunjiao.osmunda.model.WriterType
 import java.io.File
 
 interface Reader {
