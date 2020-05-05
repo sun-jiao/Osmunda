@@ -40,11 +40,17 @@ class ForwardFragment : Fragment() {
 
         val handler : Handler = object : Handler(Looper.getMainLooper()){
             override fun handleMessage(msg: Message){
-                adapter.add(msg.obj as String)
+                when (msg.what){
+                    0 -> adapter.clear()
+                    1 -> adapter.add(msg.obj as String)
+                }
             }
         }
 
-        val thread = Thread(Runnable {
+        geocode_button.setOnClickListener { Thread(Runnable {
+            val msg = handler.obtainMessage()
+            msg.what = 0
+            handler.sendMessage(msg)
             Log.i(TAG, "start search")
             val keyWord = place_name.text.toString()
             val database: SQLiteDatabase = getDatabase()
@@ -55,12 +61,11 @@ class ForwardFragment : Fragment() {
                 Log.i(TAG, result.name + "  " + result.databaseId + "  " + address.fullAddress)
 
                 val message = handler.obtainMessage()
+                message.what = 1
                 message.obj = address.fullAddress
                 handler.sendMessage(message)
             }
-        })
-
-        geocode_button.setOnClickListener { thread.start() }
+        }).start() }
     }
 
     private fun getDatabase() : SQLiteDatabase {

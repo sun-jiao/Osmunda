@@ -16,6 +16,7 @@ import moe.sunjiao.osmunda.Osmunda
 import moe.sunjiao.osmunda.geocoder.ReverseGeocoder
 import moe.sunjiao.osmunda.model.SearchResult
 import moe.sunjiao.osmundademo.R
+import kotlin.concurrent.thread
 
 class ReverseFragment : Fragment() {
 
@@ -40,11 +41,17 @@ class ReverseFragment : Fragment() {
 
         val handler : Handler = object : Handler(Looper.getMainLooper()){
             override fun handleMessage(msg: Message){
-                adapter.add(msg.obj as String)
+                when (msg.what){
+                    0 -> adapter.clear()
+                    1 -> adapter.add(msg.obj as String)
+                }
             }
         }
 
-        val thread = Thread(Runnable {
+        reverse_geocode_button.setOnClickListener { Thread(Runnable {
+            val msg = handler.obtainMessage()
+            msg.what = 0
+            handler.sendMessage(msg)
             Log.i(TAG, "start search")
             val lat = latitude_text.text.toString()
             val lon = longitude_text.text.toString()
@@ -53,15 +60,14 @@ class ReverseFragment : Fragment() {
             Log.i(TAG, "complete")
             for (result in list) {
                 val address = result.toAddress()
-                Log.i(TAG, result.name + "  " + result.databaseId + "  " + address.fullAddress)
+                Log.i(TAG, result.name + "  " + result.databaseId + "  " +result.lat + "  " +result.lon + "  " + address.fullAddress)
 
                 val message = handler.obtainMessage()
+                message.what = 1
                 message.obj = address.fullAddress
                 handler.sendMessage(message)
             }
-        })
-
-        reverse_geocode_button.setOnClickListener { thread.start() }
+        }).start() }
     }
 
     private fun getDatabase() : SQLiteDatabase {

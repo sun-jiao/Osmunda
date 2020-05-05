@@ -49,28 +49,26 @@ class HomeFragment : Fragment() {
             startActivityForResult(Intent.createChooser(intent, "Select Osm Source File"), 100)
         }
 
-        val thread = Thread(Runnable {
-            val databaseName = database_name.text.toString()
-            if (this::file.isInitialized && databaseName != ""){
-                reader.readData(file, requireContext(), databaseName)
-                val task: TimerTask = object : TimerTask() {
-                    override fun run() {
-                        val message = handler.obtainMessage()
-                        message.obj = arrayOf(reader.progress, import_progress)
-                        message.what = 0
-                        handler.sendMessage(message)
-                    }
-                }
-                val timer = Timer(true)
-
-                timer.schedule(task, 0, 500)
-            } else {
-                Toast.makeText(requireContext(), "select a file and set its name!", LENGTH_LONG).show()
-            }
-        })
-
         import_button.setOnClickListener {
-           thread.start()
+            Thread(Runnable {
+                val databaseName = database_name.text.toString()
+                if (this::file.isInitialized && databaseName != ""){
+                    reader.readData(file, requireContext(), databaseName)
+                    val task: TimerTask = object : TimerTask() {
+                        override fun run() {
+                            val message = handler.obtainMessage()
+                            message.obj = arrayOf(reader.progress, import_progress)
+                            message.what = 0
+                            handler.sendMessage(message)
+                        }
+                    }
+                    val timer = Timer(true)
+
+                    timer.schedule(task, 0, 500)
+                } else {
+                    Toast.makeText(requireContext(), "select a file and set its name!", LENGTH_LONG).show()
+                }
+            }).start()
         }
     }
 
