@@ -3,13 +3,27 @@ package moe.sunjiao.osmunda.geocoder
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.location.Location
-import moe.sunjiao.osmunda.model.OsmType
 import moe.sunjiao.osmunda.model.SearchResult
 import org.osmdroid.api.IGeoPoint
 import org.osmdroid.util.GeoPoint
 import java.util.*
 
+/**
+ * search place names using a geographic coordinates
+ * created on 4/22/2020.
+ *
+ * @author Sun Jiao(孙娇）
+ */
+
 class ReverseGeocoder(val database: SQLiteDatabase) {
+
+    /**
+     * @param latitude latitude of target location
+     * @param longitude longitude of target location
+     * @param limit number of results
+     * @param offset number of rows to skip before query
+     * @return list of SearchResult
+     */
     @Throws(Exception::class)
     fun search(
         latitude: Double,
@@ -46,60 +60,77 @@ class ReverseGeocoder(val database: SQLiteDatabase) {
         return resultList
     }
 
+    /**
+     * @param geoPoint coordinate of target location in osmdroid GeoPoint
+     * @param limit number of results
+     * @param offset number of rows to skip before query
+     * @return list of SearchResult
+     */
     @Throws(Exception::class)
     fun search(
         geoPoint: GeoPoint,
         limit: Int = 1,
         offset: Int = 0
-    ): List<SearchResult> {
-        val lat: Double = geoPoint.latitude
-        val lon: Double = geoPoint.longitude
-        return search(lat,lon,limit,offset)
-    }
+    ): List<SearchResult>
+            = search(geoPoint.latitude, geoPoint.longitude, limit, offset)
 
+    /**
+     * @param iGeoPoint coordinate of target location in osmdroid IGeoPoint
+     * @param limit number of results
+     * @param offset number of rows to skip before query
+     * @return list of SearchResult
+     */
     @Throws(Exception::class)
     fun search(
         iGeoPoint: IGeoPoint,
         limit: Int = 1,
         offset: Int = 0
-    ): List<SearchResult> {
-        val lat: Double = iGeoPoint.latitude
-        val lon: Double = iGeoPoint.longitude
-        return search(lat,lon,limit,offset)
-    }
+    ): List<SearchResult>
+            = search(iGeoPoint.latitude, iGeoPoint.longitude, limit, offset)
 
+    /**
+     * @param location coordinate of target location in android Location
+     * @param limit number of results
+     * @param offset number of rows to skip before query
+     * @return list of SearchResult
+     */
     @Throws(Exception::class)
     fun search(
         location: Location,
         limit: Int = 1,
         offset: Int = 0
-    ): List<SearchResult> {
-        val lat: Double = location.latitude
-        val lon: Double = location.longitude
-        return search(lat,lon,limit,offset)
-    }
+    ): List<SearchResult>
+            = search(location.latitude, location.longitude, limit, offset)
 
+    /**
+     * @param latitude latitude of target location
+     * @param longitude longitude of target location
+     * @param limit number of results
+     * @param offset number of rows to skip before query
+     * @return list of SearchResult
+     */
     @Throws(Exception::class)
     fun search(
         latitude: String,
         longitude: String,
         limit: Int = 1,
         offset: Int = 0
-    ): List<SearchResult> {
-        val lat: Double = latitude.toDouble()
-        val lon: Double = longitude.toDouble()
-        return search(lat,lon,limit,offset)
-    }
+    ): List<SearchResult>
+            = search(latitude.toDouble(),longitude.toDouble(),limit,offset)
 
+    /**
+     * @param latitude latitude of target location
+     * @param longitude longitude of target location
+     * @param limit number of results
+     * @param offset number of rows to skip before query
+     * @return list of SearchResult
+     */
     @Throws(Exception::class)
     fun search(
         latitude: Float,
         longitude: Float,
         limit: Int = 1,
         offset: Int = 0
-    ): List<SearchResult> {
-        val lat: Double = latitude.toDouble()
-        val lon: Double = longitude.toDouble()
-        return search(lat,lon,limit,offset)
-    }
+    ): List<SearchResult>
+            = search(latitude.toDouble(),longitude.toDouble(),limit,offset)
 }

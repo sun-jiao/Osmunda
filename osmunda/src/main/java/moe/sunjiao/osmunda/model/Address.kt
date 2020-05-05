@@ -4,6 +4,20 @@ import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import java.util.*
 
+/**
+ * get full address from a search result
+ * created on 4/22/2020.
+ *
+ * @author Sun Jiao(孙娇）
+ *
+ * @param name name of location
+ * @param databaseId element id in osm data
+ * @param database database in which this element could be found
+ * @param latitude latitude of location
+ * @param longitude longitude of location
+ * @param locale country or area or language of address
+ */
+
 class Address(val name: String, databaseId: Long, database: SQLiteDatabase, val latitude: Double, val longitude: Double, private var locale: Locale? = null ) {
     var state: String = ""
     var city: String = ""
@@ -99,14 +113,16 @@ class Address(val name: String, databaseId: Long, database: SQLiteDatabase, val 
             }
             if (county == ""){
                 val where_county_way = sqliteStatement.county_way
-                val list = arrayListOf<result>()
+                val list = arrayListOf<Result>()
                 val cursor: Cursor = database.rawQuery("SELECT * FROM tag inner join nodes, way_no on tag.id=way_no.way_id and way_no.node_id=nodes.id where $where_county_way group by tag.id order by (lat - ?) * (lat - ?) + (lon - ?) * (lon - ?)  asc limit 1 ",
                     arrayOf(lat, lat, lon, lon))
                 if (cursor.moveToNext())
-                list.add(result(
-                    cursor.getString(cursor.getColumnIndex("v")),
-                    cursor.getDouble(cursor.getColumnIndex("lat")),
-                    cursor.getDouble(cursor.getColumnIndex("lon"))))
+                list.add(
+                    Result(
+                        cursor.getString(cursor.getColumnIndex("v")),
+                        cursor.getDouble(cursor.getColumnIndex("lat")),
+                        cursor.getDouble(cursor.getColumnIndex("lon")))
+                )
                 cursor.close()
                 val where_county_node = sqliteStatement.county_node
                 val cursor2: Cursor = database.rawQuery("SELECT * FROM tag inner join nodes on tag.id=nodes.id where $where_county_node group by tag.id order by (lat - ?) * (lat - ?) + (lon - ?) * (lon - ?)  asc limit 1 ",
@@ -116,10 +132,10 @@ class Address(val name: String, databaseId: Long, database: SQLiteDatabase, val 
                     val cursor3: Cursor = database.rawQuery("SELECT * FROM tag where id = $id and k = 'name' ", null)
                     if (cursor3.moveToNext())
                     list.add(
-                        result(
+                        Result(
                             cursor3.getString(cursor3.getColumnIndex("v")),
                             cursor2.getDouble(cursor2.getColumnIndex("lat")),
-                        cursor2.getDouble(cursor2.getColumnIndex("lon")))
+                            cursor2.getDouble(cursor2.getColumnIndex("lon")))
                     )
                     cursor3.close()
                 }
@@ -159,14 +175,16 @@ class Address(val name: String, databaseId: Long, database: SQLiteDatabase, val 
             }*/
             if (neighbourhood == ""){
                 val where_neighbourhood_way = sqliteStatement.neighbourhood_way
-                val list = arrayListOf<result>()
+                val list = arrayListOf<Result>()
                 val cursor: Cursor = database.rawQuery("SELECT * FROM tag inner join nodes, way_no on tag.id=way_no.way_id and way_no.node_id=nodes.id where $where_neighbourhood_way group by tag.id order by (lat - ?) * (lat - ?) + (lon - ?) * (lon - ?)  asc limit 1 ",
                     arrayOf(lat, lat, lon, lon))
                 if (cursor.moveToNext())
-                    list.add(result(
-                        cursor.getString(cursor.getColumnIndex("v")),
-                        cursor.getDouble(cursor.getColumnIndex("lat")),
-                        cursor.getDouble(cursor.getColumnIndex("lon"))))
+                    list.add(
+                        Result(
+                            cursor.getString(cursor.getColumnIndex("v")),
+                            cursor.getDouble(cursor.getColumnIndex("lat")),
+                            cursor.getDouble(cursor.getColumnIndex("lon")))
+                    )
                 cursor.close()
                 val where_neighbourhood_node = sqliteStatement.neighbourhood_node
                 val cursor2: Cursor = database.rawQuery("SELECT * FROM tag inner join nodes on tag.id=nodes.id where $where_neighbourhood_node group by tag.id order by (lat - ?) * (lat - ?) + (lon - ?) * (lon - ?)  asc limit 1 ",
@@ -176,7 +194,7 @@ class Address(val name: String, databaseId: Long, database: SQLiteDatabase, val 
                     val cursor3: Cursor = database.rawQuery("SELECT * FROM tag where id = $id and k = 'name' ", null)
                     if (cursor3.moveToNext())
                         list.add(
-                            result(
+                            Result(
                                 cursor3.getString(cursor3.getColumnIndex("v")),
                                 cursor2.getDouble(cursor2.getColumnIndex("lat")),
                                 cursor2.getDouble(cursor2.getColumnIndex("lon")))
@@ -205,9 +223,12 @@ class Address(val name: String, databaseId: Long, database: SQLiteDatabase, val 
         }
     }
 
+    /**
+     * @param result query result from Geocoder or ReverseGeocoder
+     */
     constructor(result: SearchResult) : this(result.name, result.databaseId, result.database, result.lat, result.lon)
 
-    class result (val name: String, val lat: Double, val lon: Double)
+    private class Result (val name: String, val lat: Double, val lon: Double)
 }
 
 /*

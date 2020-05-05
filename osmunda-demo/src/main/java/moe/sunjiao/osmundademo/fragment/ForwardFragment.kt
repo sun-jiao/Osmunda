@@ -54,7 +54,7 @@ class ForwardFragment : Fragment() {
             Log.i(TAG, "start search")
             val keyWord = place_name.text.toString()
             val database: SQLiteDatabase = getDatabase()
-            val list: List<SearchResult> = Geocoder(database).search(keyWord, 10, 0, 30.7324, 114.6589, 30.3183, 114.0588)
+            val list: List<SearchResult> = Geocoder(database).search(keyWord, 10, 0)
             Log.i(TAG, "complete")
             for (result in list) {
                 val address = result.toAddress()

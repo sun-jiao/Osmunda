@@ -20,6 +20,13 @@ import java.io.FileNotFoundException
 import java.io.InputStream
 import java.util.*
 
+/**
+ * reader for xml and pbf, using osmosis reader
+ * created on 4/22/2020.
+ *
+ * @author Sun Jiao(孙娇）
+ */
+
 class OsmosisReader :Reader, Sink {
     override val parserName: String = "Osmosis"
     override val read : Long
@@ -58,6 +65,11 @@ class OsmosisReader :Reader, Sink {
                 (-1).toDouble()
     }
 
+    /**
+     * @param file pbf or xml file to be read
+     * @param context android context where this fun is called
+     * @param databaseName name of database to be written
+     */
     @Throws(Exception::class)
     override fun readData(file: File, context : Context, databaseName: String) {
         val reader: RunnableSource
@@ -87,6 +99,11 @@ class OsmosisReader :Reader, Sink {
         reading(context, databaseName,reader, isPbf, fis, start)
     }
 
+    /**
+     * @param uri pbf or xml uri to be read
+     * @param context android context where this fun is called
+     * @param databaseName name of database to be written
+     */
     override fun readData(uri: Uri, context: Context, databaseName: String) {
         val pathString = uri.path ?: throw java.lang.IllegalArgumentException()
         val fis: InputStream = context.contentResolver.openInputStream(uri) ?: throw java.lang.IllegalArgumentException()

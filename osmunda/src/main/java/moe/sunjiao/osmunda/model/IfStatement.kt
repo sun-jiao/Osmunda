@@ -2,6 +2,13 @@ package moe.sunjiao.osmunda.model
 
 import java.util.*
 
+/**
+ * if statement in different language to fix issue in osm raw data
+ * created on 4/24/2020.
+ *
+ * @author Sun Jiao(孙娇）
+ */
+
 class IfStatement (){
 
     var city            : (current: String, key: String, value: String) -> Boolean = { _, key, _ -> key == "city" || key.endsWith(":city") }
@@ -15,6 +22,9 @@ class IfStatement (){
 
     init{ }
 
+    /**
+     * @param locale country or area or language of address
+     */
     constructor(locale: Locale?): this(){
         when (locale) {
             Locale.SIMPLIFIED_CHINESE, Locale.CHINA, Locale.CHINESE, Locale.PRC -> this(

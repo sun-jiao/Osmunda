@@ -2,22 +2,38 @@ package moe.sunjiao.osmunda.geocoder
 
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
-import moe.sunjiao.osmunda.model.OsmType
 import moe.sunjiao.osmunda.model.SearchResult
 import org.osmdroid.util.BoundingBox
 import java.util.*
 
+/**
+ * convert a name to geographic coordinates
+ * created on 4/22/2020.
+ *
+ * @author Sun Jiao(孙娇）
+ */
+
 class Geocoder(val database: SQLiteDatabase) {
 
+    /**
+     * @param searchQueryOptional name of target location
+     * @param limit number of results
+     * @param offset number of rows to skip before query
+     * @param maxLat max latitude of wuery range
+     * @param maxLon max longitude of query range
+     * @param minLat min latitude of query range
+     * @param minLon min longitude of query range
+     * @return list of SearchResult
+     */
     @Throws(Exception::class)
-    fun search(
+    fun search (
         searchQueryOptional: String,
-        limit: Int,
-        offset: Int,
-        maxLat: Double,
-        maxLon: Double,
-        minLat: Double,
-        minLon: Double
+        limit: Int = 1,
+        offset: Int = 0,
+        maxLat: Double = 90.00,
+        maxLon: Double = 180.00,
+        minLat: Double = -90.00,
+        minLon: Double = -180.00
     ): List<SearchResult> {
         val resultList: MutableList<SearchResult> = ArrayList<SearchResult>()
 
@@ -43,10 +59,54 @@ class Geocoder(val database: SQLiteDatabase) {
         return resultList
     }
 
-    fun search (searchQueryOptional: String, limit: Int, offset: Int): List<SearchResult>
-            = search(searchQueryOptional, limit, offset, 90.00, 180.00, -90.00, -180.00)
+    /**
+     * @param searchQueryOptional name of target location
+     * @param limit number of results
+     * @param maxLat max latitude of wuery range
+     * @param maxLon max longitude of query range
+     * @param minLat min latitude of query range
+     * @param minLon min longitude of query range
+     * @return list of SearchResult
+     */
+    @Throws(Exception::class)
+    fun search (
+        searchQueryOptional: String,
+        limit: Int,
+        maxLat: Double,
+        maxLon: Double,
+        minLat: Double,
+        minLon: Double
+    ): List<SearchResult>
+            = search(searchQueryOptional, limit, 0, maxLat, maxLon, minLat, minLon)
 
-    fun search (searchQueryOptional: String, limit: Int, offset: Int, boundingBox: BoundingBox): List<SearchResult>
+    /**
+     * @param searchQueryOptional name of target location
+     * @param limit number of results
+     * @param offset number of rows to skip before query
+     * @param boundingBox bounding box of query range
+     * @return list of SearchResult
+     */
+    @Throws(Exception::class)
+    fun search (
+        searchQueryOptional: String,
+        limit: Int,
+        offset: Int,
+        boundingBox: BoundingBox
+    ): List<SearchResult>
             = search(searchQueryOptional, limit, offset, boundingBox.latNorth, boundingBox.lonEast,boundingBox.latSouth,boundingBox.lonWest)
+
+    /**
+     * @param searchQueryOptional name of target location
+     * @param limit number of results
+     * @param boundingBox bounding box of query range
+     * @return list of SearchResult
+     */
+    @Throws(Exception::class)
+    fun search (
+        searchQueryOptional: String,
+        limit: Int,
+        boundingBox: BoundingBox
+    ): List<SearchResult>
+            = search(searchQueryOptional, limit, 0, boundingBox)
 
 }

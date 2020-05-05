@@ -2,6 +2,13 @@ package moe.sunjiao.osmunda.model
 
 import java.util.*
 
+/**
+ * sql statement in different language to fix issue in osm raw data
+ * created on 4/24/2020.
+ *
+ * @author Sun Jiao(孙娇）
+ */
+
 class SQLiteStatement (){
     var city : String = " k like '%city' "
         private set
@@ -20,6 +27,9 @@ class SQLiteStatement (){
 
     init { }
 
+    /**
+     * @param locale country or area or language of address
+     */
     constructor(locale: Locale?) : this(){
         when (locale) {
             Locale.SIMPLIFIED_CHINESE, Locale.CHINA, Locale.CHINESE, Locale.PRC -> this(

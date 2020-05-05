@@ -9,6 +9,17 @@ import moe.sunjiao.osmunda.Osmunda
 import moe.sunjiao.osmunda.model.OsmType
 import org.openstreetmap.osmosis.core.domain.v0_6.*
 
+/**
+ * default sql writer
+ * created on 4/22/2020.
+ *
+ * @author Sun Jiao(孙娇）
+ *
+ * @param context android context where Reader.readData is called
+ * @param databaseName name of database to be written
+ * @param commitFrequency commit frequency
+ */
+
 class SQLiteWriter (context : Context, databaseName: String, private val commitFrequency : Int = 5000): Writer {
     override var read: Long = 0
     override var insert : Long = 0
@@ -33,6 +44,9 @@ class SQLiteWriter (context : Context, databaseName: String, private val commitF
         database.execSQL("CREATE TABLE IF NOT EXISTS \"ways\" (\"id\" INTEGER PRIMARY KEY  NOT NULL , \"changeset\" INTEGER, \"version\" INTEGER, \"user\" TEXT, \"uid\" INTEGER, \"timestamp\" BIGINT)")
     }
 
+    /**
+     * create index in database to speed up query
+     */
     override fun setIndex() {
         database.execSQL("CREATE INDEX tag_index ON tag (id, k, v)")
         database.execSQL("CREATE INDEX way_no_index ON way_no (way_id, node_id)")
