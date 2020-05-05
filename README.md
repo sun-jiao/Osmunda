@@ -1,7 +1,7 @@
 # Osmunda
 
-[![](https://jitpack.io/v/moe.sunjiao/osmunda.svg)](https://jitpack.io/#moe.sunjiao/osmunda)
-
+[![](https://jitpack.io/v/moe.sunjiao/osmunda.svg?style=flat-square)](https://jitpack.io/#moe.sunjiao/osmunda) 
+[![](https://img.shields.io/badge/Awesome%20Android-Osmunda-brightgreen?style=flat-square)](https://android.libhunt.com/osmunda-alternatives) 
 [中文版](./ZH-rCN.md)
 
 ## Introduction

@@ -1,6 +1,6 @@
 # Osmunda
-[![](https://jitpack.io/v/moe.sunjiao/osmunda.svg)](https://jitpack.io/#moe.sunjiao/osmunda)
-
+[![](https://jitpack.io/v/moe.sunjiao/osmunda.svg?style=flat-square)](https://jitpack.io/#moe.sunjiao/osmunda) 
+[![](https://img.shields.io/badge/Awesome%20Android-Osmunda-brightgreen?style=flat-square)](https://android.libhunt.com/osmunda-alternatives) 
 ## 简介
 
 *Osmunda*是一个Android库，读取开放街道地图数据（osm.pbf, osm.bz2及osm.gz格式, 后两者本质上都是xml），写入SQLite中，可用于离线地理编码等。
