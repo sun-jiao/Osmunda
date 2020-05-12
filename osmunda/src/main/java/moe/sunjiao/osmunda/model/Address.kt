@@ -172,7 +172,7 @@ class Address(val name: String, databaseId: Long, database: SQLiteDatabase, val 
                 cursor2.close()
                 list.sortBy { (it.lat - latitude) * (it.lat - latitude) + (it.lon - longitude) * (it.lon - longitude) }
                 town = list[0].name
-            }*/
+            }
             if (neighbourhood == ""){
                 val where_neighbourhood_way = sqliteStatement.neighbourhood_way
                 val list = arrayListOf<Result>()
@@ -204,13 +204,15 @@ class Address(val name: String, databaseId: Long, database: SQLiteDatabase, val 
                 cursor2.close()
                 list.sortBy { (it.lat - latitude) * (it.lat - latitude) + (it.lon - longitude) * (it.lon - longitude) }
                 neighbourhood = list[0].name
-            }
+            }*/
             database.setTransactionSuccessful()
             database.endTransaction()
         } catch (ex: Exception) {
         } finally {
             if(housename != "")
                 housename = "($housename)"
+            if(neighbourhood != "")
+                neighbourhood = "$neighbourhood, "
             if(housenumber != "")
                 housenumber = "$housenumber, "
             if(postcode != "")
@@ -219,7 +221,7 @@ class Address(val name: String, databaseId: Long, database: SQLiteDatabase, val 
                 street = "$street, "
             if (town != "")
                 town = "$town, "
-            fullAddress = "$name$housename, $neighbourhood, $housenumber$street$town$county, $city, $state, $country$postcode"
+            fullAddress = "$name$housename, $neighbourhood$housenumber$street$town$county, $city, $state, $country$postcode"
         }
     }
 
