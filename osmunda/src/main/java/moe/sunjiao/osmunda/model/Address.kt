@@ -45,7 +45,7 @@ class Address(val name: String, databaseId: Long, database: SQLiteDatabase, val 
                 if (cursor.moveToNext())
                     locale = Locale(cursor.getString(1))
                 else {
-                    val cursor1: Cursor = database.rawQuery("SELECT * FROM tag inner join nodes, way_no on tag.id=way_no.way_id and way_no.node_id=nodes.id where k like '%country_code' group by tag.id order by (lat - ?) * (lat - ?) + (lon - ?) * (lon - ?)  asc limit 1 ",
+                    val cursor1: Cursor = database.rawQuery("SELECT * FROM tag left join way_no on tag.id = way_no.way_id left join nodes on tag.id=nodes.id or nodes.id=way_no.node_id where k like '%country_code' group by tag.id order by (lat - ?) * (lat - ?) + (lon - ?) * (lon - ?)  asc limit 1 ",
                         arrayOf(lat, lat, lon, lon))
                     if (cursor1.moveToNext())
                         locale = Locale(cursor1.getString(cursor1.getColumnIndex("v")))

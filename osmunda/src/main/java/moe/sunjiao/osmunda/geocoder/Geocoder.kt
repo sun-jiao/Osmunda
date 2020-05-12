@@ -54,7 +54,6 @@ class Geocoder(val database: SQLiteDatabase) {
         } catch (ex: Exception) {
             print(ex)
         } finally {
-            database.close()
         }
         return resultList
     }
