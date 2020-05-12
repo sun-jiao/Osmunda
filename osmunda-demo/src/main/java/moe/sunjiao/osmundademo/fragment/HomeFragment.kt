@@ -80,9 +80,10 @@ class HomeFragment : Fragment() {
                             val array : Array<Any> = msg.obj as Array<Any>
                             if (array[0] is Double && array[1] is ProgressBar){
                                 (array[1] as ProgressBar).progress = ((array[0] as Double) * 100).toInt()
-                                if (array[0] == 1.0 && array[2] is Timer)
+                                if (array[0] == 1.0 && array[2] is Timer && array[3] is String){
                                     (array[2] as Timer).cancel()
-                                    adapter.add("")
+                                    adapter.add(array[3] as String)
+                                }
                             }
                         }
                     }
