@@ -19,7 +19,7 @@ class Osmunda(private val context: Context) {
 
     fun getDatabaseList() : Array<File>?{
         return getDatabaseDir()
-            .listFiles { dir, name -> name.toLowerCase(Locale.ROOT).endsWith("-osmunda.sqlite") }
+            .listFiles { dir, name -> name.toLowerCase(Locale.ROOT).endsWith(".sqlite") }
     }
 
     /**
