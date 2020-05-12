@@ -1,5 +1,6 @@
 package moe.sunjiao.osmundademo.fragment
 
+import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.os.Bundle
 import android.os.Handler
@@ -69,6 +70,6 @@ class ForwardFragment : Fragment() {
     }
 
     private fun getDatabase() : SQLiteDatabase {
-        return Osmunda(requireContext()).getDatabaseByName("hubeitest2")
+        return Osmunda(requireContext()).getDatabaseByName(requireContext().getSharedPreferences("database", Context.MODE_PRIVATE).getString("current", "not specified").toString())
     }
 }

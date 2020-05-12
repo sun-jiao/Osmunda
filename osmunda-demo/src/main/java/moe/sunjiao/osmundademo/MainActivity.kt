@@ -1,5 +1,6 @@
 package moe.sunjiao.osmundademo
 
+import android.content.Context
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
@@ -19,6 +20,8 @@ class MainActivity : AppCompatActivity() {
         initView()
         fragment_view_pager.currentItem = 1
         title = getString(R.string.title_home)
+        val currentDb = getSharedPreferences("database", Context.MODE_PRIVATE).getString("current", "not specified")
+        current_database.text = String.format(getString(R.string.current_db), currentDb)
     }
 
     private fun initView() {
@@ -54,6 +57,7 @@ class MainActivity : AppCompatActivity() {
                 return false
             }
         })
+
         fragment_view_pager.addOnPageChangeListener(object: ViewPager.OnPageChangeListener {
             override fun onPageScrolled(position:Int, positionOffset:Float, positionOffsetPixels:Int) {
 
