@@ -1,7 +1,10 @@
 package moe.sunjiao.osmunda.reader
 
 import android.content.Context
+import android.database.Cursor
 import android.net.Uri
+import android.provider.OpenableColumns
+import android.util.Log
 import crosby.binary.osmosis.OsmosisReader
 import moe.sunjiao.osmunda.model.ImportOption
 import moe.sunjiao.osmunda.model.WriterType
@@ -48,21 +51,29 @@ class OsmosisReader :Reader, Sink {
     }
 
     private var isReading = false
+    private var isFinished: Boolean = false
     var readProportion : Int = 1
     var insertProportion : Int = 1
 
     var commitFrequency : Int = 5000
     private var expectedRecordCount: Double = 0.00
-    lateinit var writer : Writer
+    private lateinit var writer : Writer
 
     override var writerType : WriterType = WriterType.SQLITE_WRITER
 
     override val progress : Double
         get() {
-            return if (isReading) {
-                (read * readProportion + insert * insertProportion.toDouble()) / (expectedRecordCount * (readProportion + insertProportion))
-            } else
-                (-1).toDouble()
+            val prog0 = (read * readProportion + insert * insertProportion.toDouble()) / (expectedRecordCount * (readProportion + insertProportion))
+            return if (isReading)
+                if (prog0 > 1.00)
+                    0.99
+                else
+                    prog0
+            else
+                if (isFinished)
+                    1.toDouble()
+                else
+                    (-1).toDouble()
     }
 
     /**
@@ -72,31 +83,10 @@ class OsmosisReader :Reader, Sink {
      */
     @Throws(Exception::class)
     override fun readData(file: File, context : Context, databaseName: String) {
-        val reader: RunnableSource
-        var fis: InputStream? = null
-        val start = System.currentTimeMillis()
-        var isPbf = false
-
-        expectedRecordCount = 0.1968 * file.length()
-
-        if (file.name.toLowerCase(Locale.ROOT).endsWith(".pbf")) {
-            fis = FileInputStream(file)
-            reader = OsmosisReader(fis)
-            isPbf = true
-            expectedRecordCount = 0.33075 * file.length()
-            readProportion = 2
-            insertProportion = 11
-        } else if (file.name.toLowerCase(Locale.ROOT).endsWith(".gz")) {
-            reader = XmlReader(file, false, CompressionMethod.GZip)
-        } else if (file.name.toLowerCase(Locale.ROOT).endsWith(".bz2")) {
-            reader = XmlReader(file, false, CompressionMethod.BZip2)
-        } else
-            throw IllegalArgumentException()
-
         if (!file.exists())
             throw FileNotFoundException("File Not Found")
 
-        reading(context, databaseName,reader, isPbf, fis, start)
+        reading(context, databaseName, FileInputStream(file), file.name)
     }
 
     /**
@@ -105,30 +95,45 @@ class OsmosisReader :Reader, Sink {
      * @param databaseName name of database to be written
      */
     override fun readData(uri: Uri, context: Context, databaseName: String) {
-        val pathString = uri.path ?: throw java.lang.IllegalArgumentException()
-        val fis: InputStream = context.contentResolver.openInputStream(uri) ?: throw java.lang.IllegalArgumentException()
-        val reader: RunnableSource
-        val start = System.currentTimeMillis()
-        var isPbf = false
-        expectedRecordCount = 0.1968 * fis.available()
 
-        if (pathString.toLowerCase(Locale.ROOT).endsWith(".pbf")){
-            reader = OsmosisReader(fis)
-            isPbf = true
+        val cursor: Cursor? = context.contentResolver.query( uri, null, null, null, null, null)
+        var displayName = ""
+        cursor?.use {
+            if (it.moveToFirst()) {
+                displayName = it.getString(it.getColumnIndex(OpenableColumns.DISPLAY_NAME))
+                Log.i("Osmosis", "Display Name: $displayName")
+            } else {
+                throw java.lang.IllegalArgumentException("Unable to determine file type.")
+            }
+        }?:throw java.lang.IllegalArgumentException("Unable to determine file type.")
+
+        val fis: InputStream = context.contentResolver.openInputStream(uri) ?: throw java.lang.IllegalArgumentException()
+
+        reading(context, databaseName, fis, displayName)
+    }
+
+    private fun reading(
+        context: Context,
+        databaseName: String,
+        fis: InputStream,
+        displayName: String
+    ){
+        val start = System.currentTimeMillis()
+        val readerRunnableSource: RunnableSource
+        expectedRecordCount = 0.1664 * fis.available()
+
+        if (displayName.endsWith(".pbf")){
+            readerRunnableSource = OsmosisReader(fis)
             expectedRecordCount = 0.33075 * fis.available()
             readProportion = 2
             insertProportion = 11
-        } else if (pathString.toLowerCase(Locale.ROOT).endsWith(".gz")){
-            reader = XmlReader(fis, false, CompressionMethod.GZip)
-        } else if (pathString.toLowerCase(Locale.ROOT).endsWith(".bz2")){
-            reader = XmlReader(fis, false, CompressionMethod.BZip2)
+        } else if (displayName.endsWith(".gz")){
+            readerRunnableSource = XmlReader(fis, false, CompressionMethod.GZip)
+        } else if (displayName.endsWith(".bz2")){
+            readerRunnableSource = XmlReader(fis, false, CompressionMethod.BZip2)
         } else
-            throw java.lang.IllegalArgumentException()
-
-        reading(context, databaseName, reader, isPbf, fis, start)
-    }
-
-    private fun reading(context: Context, databaseName: String, reader: RunnableSource, isPbf : Boolean, fis : InputStream?, start: Long){
+            throw java.lang.IllegalArgumentException("Unsupported file type.")
+        isFinished = false
         when(writerType){
             WriterType.SIMPLE_SQL_WRITER -> {
                 writer = SimpleSQLWriter(
@@ -149,10 +154,10 @@ class OsmosisReader :Reader, Sink {
         println(e)
         isReading = true
 
-        reader.setSink(this)
+        readerRunnableSource.setSink(this)
         println("starting import")
         val readerThread = Thread(
-            reader
+            readerRunnableSource
         )
         readerThread.uncaughtExceptionHandler =
             Thread.UncaughtExceptionHandler { thread, throwable ->
@@ -168,12 +173,11 @@ class OsmosisReader :Reader, Sink {
         }
         println("import finished")
         writer.commit()
-        if (isPbf){
-            fis?.close()
-        }
+        fis.close()
         writer.setIndex()
         println("Total import time - " + (System.currentTimeMillis() - start) + "ms, total elements processed " + elementCount + " inserts " + read)
         isReading = false
+        isFinished = true
     }
 
     override fun process(entityContainer: EntityContainer) {
