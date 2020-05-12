@@ -52,6 +52,7 @@ class SimpleSQLWriter (context : Context, databaseName: String, private val comm
         database.execSQL("CREATE INDEX tag_index ON tag (id, k)")
         database.execSQL("CREATE INDEX way_no_index ON way_no (way_id, node_id)")
         database.execSQL("CREATE INDEX nodes_index ON nodes (id, lat, lon)")
+        database.close()
     }
 
     override fun checkCommit(){

@@ -51,6 +51,7 @@ class SQLiteWriter (context : Context, databaseName: String, private val commitF
         database.execSQL("CREATE INDEX tag_index ON tag (id, k, v)")
         database.execSQL("CREATE INDEX way_no_index ON way_no (way_id, node_id)")
         database.execSQL("CREATE INDEX nodes_index ON nodes (id, lat, lon)")
+        database.close()
     }
 
     override fun checkCommit(){
