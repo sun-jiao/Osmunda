@@ -1,6 +1,5 @@
 package moe.sunjiao.osmundademo.fragment
 
-import android.app.Activity.MODE_PRIVATE
 import android.app.Activity.RESULT_OK
 import android.content.Context
 import android.content.Intent
@@ -13,9 +12,11 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
+import android.widget.ProgressBar
+import android.widget.Toast
 import android.widget.Toast.LENGTH_SHORT
-import androidx.core.view.get
 import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_home.*
@@ -24,7 +25,6 @@ import moe.sunjiao.osmunda.model.ImportOption
 import moe.sunjiao.osmunda.model.WriterType
 import moe.sunjiao.osmunda.reader.OsmosisReader
 import moe.sunjiao.osmunda.reader.Reader
-import moe.sunjiao.osmundademo.MainActivity
 import moe.sunjiao.osmundademo.R
 import java.util.*
 
