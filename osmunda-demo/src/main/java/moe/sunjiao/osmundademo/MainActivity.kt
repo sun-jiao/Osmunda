@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.viewpager.widget.ViewPager
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import io.realm.Realm
 import kotlinx.android.synthetic.main.activity_main.*
 import moe.sunjiao.osmundademo.fragment.ForwardFragment
 import moe.sunjiao.osmundademo.fragment.HomeFragment
@@ -18,6 +19,12 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         initView()
+
+        val realm = Realm.getDefaultInstance()
+        realm.executeTransaction {
+            it.deleteAll()
+        }
+
         fragment_view_pager.currentItem = 1
         title = getString(R.string.title_home)
         val currentDb = getSharedPreferences("database", Context.MODE_PRIVATE).getString("current", "not specified")
